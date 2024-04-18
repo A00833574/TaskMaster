@@ -41,10 +41,12 @@ public class DeveloperService {
         Developer existingDeveloper = developerRepository.findById(developer.getId()).orElse(null);
         existingDeveloper.setName(developer.getName());
         existingDeveloper.setLastname(developer.getLastname());
+        existingDeveloper.setPhone(developer.getPhone());
         existingDeveloper.setMail(developer.getMail());
         existingDeveloper.setPassword(passwordEncoder.encode(developer.getPassword()));
-        existingDeveloper.setPhone(developer.getPhone());
         existingDeveloper.setRole(developer.getRole());
+        existingDeveloper.setProyect(developer.getProyect());
+        existingDeveloper.setTareas(developer.getTareas());
         
         return developerRepository.save(existingDeveloper);
     }
