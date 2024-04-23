@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/manager")
+@RequestMapping("/developer")
 public class DeveloperController {
     
     private final DeveloperService developerService;
