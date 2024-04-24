@@ -68,8 +68,8 @@ public class ManagerService {
     public String asignProyect(int idProyect, int idDeveloper) {
         Proyect existingProyect = proyectRepository.findById(idProyect).orElse(null);
         Developer existingDeveloper = developerRepository.findById(idDeveloper).orElse(null);
-        existingProyect.getDevelopers().add(existingDeveloper);
-        proyectRepository.save(existingProyect);
+        existingDeveloper.setProyect(existingProyect);
+        developerRepository.save(existingDeveloper);
         return "Developer with id " + idDeveloper + " has been assigned to Proyect with id " + idProyect;
     }
 }

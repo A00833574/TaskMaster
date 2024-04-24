@@ -71,5 +71,4 @@ public class DeveloperController {
         return new ResponseEntity<>(updatedDeveloper, HttpStatus.OK);
     }
     
-
 }
