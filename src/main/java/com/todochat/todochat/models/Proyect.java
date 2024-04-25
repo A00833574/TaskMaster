@@ -32,6 +32,9 @@ public class Proyect {
     @OneToMany(mappedBy = "proyect")
     private List<Developer> developers;
 
+    @OneToMany(mappedBy = "proyect")
+    private List<Task> tasks;
+
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private Manager manager;

@@ -1,2 +1,2 @@
-WALLET_LOCATION = (SOURCE = (METHOD = file) (METHOD_DATA = (DIRECTORY="C:/Users/jp569/Documents/RetosTec/TaskMaster/wallet")))
+WALLET_LOCATION = (SOURCE = (METHOD = file) (METHOD_DATA = (DIRECTORY="C:/Users/milto/Documents/Desarrollo escuela/todochat/wallet")))
 SSL_SERVER_DN_MATCH=yes

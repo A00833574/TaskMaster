@@ -26,5 +26,7 @@ FROM openjdk:21-rc-jdk-oraclelinux8
 WORKDIR /app
 COPY wallet /app/wallet
 COPY --from=build /app/target/todochat-0.0.1-SNAPSHOT.jar /app/todochat.jar
-EXPOSE 8080
-CMD ["java", "-jar", "todochat.jar"]
+ENTRYPOINT ["java", "-jar", "todochat.jar"]
+
+# docker build -t todochat .
+# docker run -p 8080:8080 todochat

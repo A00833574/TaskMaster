@@ -70,6 +70,4 @@ public class ManagerController {
         Manager updatedManager = managerService.updateManager(manager);
         return new ResponseEntity<>(updatedManager, HttpStatus.OK);
     }
-    
-
 }

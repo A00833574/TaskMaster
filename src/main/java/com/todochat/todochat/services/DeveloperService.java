@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.todochat.todochat.models.Developer;
+import com.todochat.todochat.models.Task;
 import com.todochat.todochat.repositories.DeveloperRepository;
 
 @Service
@@ -49,5 +50,10 @@ public class DeveloperService {
         existingDeveloper.setTareas(developer.getTareas());
         
         return developerRepository.save(existingDeveloper);
+    }
+
+    public List<Task> getTasksByDeveloperId(Integer id) {
+        Developer developer = developerRepository.findById(id).orElse(null);
+        return developer.getTareas();
     }
 }
