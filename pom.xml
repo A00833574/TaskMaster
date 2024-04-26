@@ -52,11 +52,19 @@
 		</dependency>
 
 		<dependency>
+<<<<<<< Updated upstream
     		<groupId>org.telegram</groupId>
     		<artifactId>telegrambots</artifactId>
     		<version>6.5.0</version>
 		</dependency>
 		
+=======
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots</artifactId>
+			<version>6.5.0</version>
+		</dependency>
+				
+>>>>>>> Stashed changes
 	</dependencies>
 
 	<build>
