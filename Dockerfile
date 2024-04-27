@@ -2,6 +2,7 @@
 FROM openjdk:21-rc-jdk-oraclelinux8 as build
 WORKDIR /app
 COPY mvnw .
+RUN chmod +x mvnw
 COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
