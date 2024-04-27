@@ -33,6 +33,7 @@ public class TaskBotController extends TelegramLongPollingBot {
 	private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
 	private TaskService taskService;
 	private String botName;
+	private final BotRouter botRouter;
 
 	public TaskBotController(String botToken, String botName, TaskService taskService) {
 		super(botToken);
@@ -40,203 +41,172 @@ public class TaskBotController extends TelegramLongPollingBot {
 		logger.info("Bot name: " + botName);
 		this.taskService = taskService;
 		this.botName = botName;
+		this.botRouter = new BotRouter();
 	}
 
 	@Override
 	public void onUpdateReceived(Update update) {
-
+		// Ejecutamos nuestro router
+	
+		
 		if (update.hasMessage() && update.getMessage().hasText()) {
+			botRouter.route(update, this);
 
-			String messageTextFromTelegram = update.getMessage().getText();
-			long chatId = update.getMessage().getChatId();
+// 			String messageTextFromTelegram = update.getMessage().getText();
+// 			long chatId = update.getMessage().getChatId();
 
-			if (messageTextFromTelegram.equals(BotCommands.START_COMMAND.getCommand())
-					|| messageTextFromTelegram.equals(BotLabels.SHOW_MAIN_SCREEN.getLabel())) {
+// 			if (messageTextFromTelegram.indexOf(BotLabels.DONE.getLabel()) != -1) {
 
-				SendMessage messageToTelegram = new SendMessage();
-				messageToTelegram.setChatId(chatId);
-				messageToTelegram.setText(BotMessages.HELLO_MYTODO_BOT.getMessage());
+// 				String done = messageTextFromTelegram.substring(0,
+// 						messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
+// 				Integer id = Integer.valueOf(done);
 
-				ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-				List<KeyboardRow> keyboard = new ArrayList<>();
+// 				try {
 
-				// first row
-				KeyboardRow row = new KeyboardRow();
-				row.add(BotLabels.LIST_ALL_ITEMS.getLabel());
-				row.add(BotLabels.ADD_NEW_ITEM.getLabel());
-				// Add the first row to the keyboard
-				keyboard.add(row);
+// 					Task item = taskService.getTaskById(id);
+// 					item.setStatus(Status.COMPLETED);
+// 					taskService.updateTask(item);
+// 					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_DONE.getMessage(), this);
 
-				// second row
-				row = new KeyboardRow();
-				row.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
-				row.add(BotLabels.HIDE_MAIN_SCREEN.getLabel());
-				keyboard.add(row);
+// 				} catch (Exception e) {
+// 					logger.error(e.getLocalizedMessage(), e);
+// 				}
 
-				// Set the keyboard
-				keyboardMarkup.setKeyboard(keyboard);
+// 			} else if (messageTextFromTelegram.indexOf(BotLabels.UNDO.getLabel()) != -1) {
 
-				// Add the keyboard markup
-				messageToTelegram.setReplyMarkup(keyboardMarkup);
+// 				String undo = messageTextFromTelegram.substring(0,
+// 						messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
+// 				Integer id = Integer.valueOf(undo);
 
-				try {
-					execute(messageToTelegram);
-				} catch (TelegramApiException e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
+// 				try {
+//                     Task item = taskService.getTaskById(id);
+// 					item.setStatus(Status.IN_PROGRESS);
+// 					taskService.updateTask(item);
+// 					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_UNDONE.getMessage(), this);
 
-			} else if (messageTextFromTelegram.indexOf(BotLabels.DONE.getLabel()) != -1) {
+// 				} catch (Exception e) {
+// 					logger.error(e.getLocalizedMessage(), e);
+// 				}
 
-				String done = messageTextFromTelegram.substring(0,
-						messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
-				Integer id = Integer.valueOf(done);
+// // FALTA STATUS DE PENDING!
 
-				try {
+// 			} else if (messageTextFromTelegram.indexOf(BotLabels.DELETE.getLabel()) != -1) {
 
-					Task item = taskService.getTaskById(id);
-					item.setStatus(Status.COMPLETED);
-					taskService.updateTask(item);
-					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_DONE.getMessage(), this);
+// 				String delete = messageTextFromTelegram.substring(0,
+// 						messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
+// 				Integer id = Integer.valueOf(delete);
 
-				} catch (Exception e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
+// 				try {
+// 					taskService.deleteTaskById(id);
+// 					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_DELETED.getMessage(), this);
 
-			} else if (messageTextFromTelegram.indexOf(BotLabels.UNDO.getLabel()) != -1) {
+// 				} catch (Exception e) {
+// 					logger.error(e.getLocalizedMessage(), e);
+// 				}
 
-				String undo = messageTextFromTelegram.substring(0,
-						messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
-				Integer id = Integer.valueOf(undo);
+// 			} else if (messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())
+// 					|| messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())) {
 
-				try {
-                    Task item = taskService.getTaskById(id);
-					item.setStatus(Status.IN_PROGRESS);
-					taskService.updateTask(item);
-					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_UNDONE.getMessage(), this);
+// 				BotHelper.sendMessageToTelegram(chatId, BotMessages.BYE.getMessage(), this);
 
-				} catch (Exception e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
+// 			} else if (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand())
+// 					|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())
+// 					|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel())) {
 
-// FALTA STATUS DE PENDING!
+// 				List<Task> allItems = taskService.getAllTasks();
+// 				ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+// 				List<KeyboardRow> keyboard = new ArrayList<>();
 
-			} else if (messageTextFromTelegram.indexOf(BotLabels.DELETE.getLabel()) != -1) {
+// 				// command back to main screen
+// 				KeyboardRow mainScreenRowTop = new KeyboardRow();
+// 				mainScreenRowTop.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
+// 				keyboard.add(mainScreenRowTop);
 
-				String delete = messageTextFromTelegram.substring(0,
-						messageTextFromTelegram.indexOf(BotLabels.DASH.getLabel()));
-				Integer id = Integer.valueOf(delete);
+// 				KeyboardRow firstRow = new KeyboardRow();
+// 				firstRow.add(BotLabels.ADD_NEW_ITEM.getLabel());
+// 				keyboard.add(firstRow);
 
-				try {
-					taskService.deleteTaskById(id);
-					BotHelper.sendMessageToTelegram(chatId, BotMessages.ITEM_DELETED.getMessage(), this);
+// 				KeyboardRow taskTitleRow = new KeyboardRow();
+// 				taskTitleRow.add(BotLabels.MY_TODO_LIST.getLabel());
+// 				keyboard.add(taskTitleRow);
 
-				} catch (Exception e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
+// 				List<Task> activeItems = allItems.stream().filter(item -> item.getStatus() == Status.IN_PROGRESS)
+// 						.collect(Collectors.toList());
 
-			} else if (messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())
-					|| messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())) {
+// 				for (Task item : activeItems) {
 
-				BotHelper.sendMessageToTelegram(chatId, BotMessages.BYE.getMessage(), this);
+// 					KeyboardRow currentRow = new KeyboardRow();
+// 					currentRow.add(item.getDescription());
+// 					currentRow.add(item.getId() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
+// 					keyboard.add(currentRow);
+// 				}
 
-			} else if (messageTextFromTelegram.equals(BotCommands.TODO_LIST.getCommand())
-					|| messageTextFromTelegram.equals(BotLabels.LIST_ALL_ITEMS.getLabel())
-					|| messageTextFromTelegram.equals(BotLabels.MY_TODO_LIST.getLabel())) {
+// 				List<Task> doneItems = allItems.stream().filter(item -> item.getStatus() == Status.COMPLETED)
+// 						.collect(Collectors.toList());
 
-				List<Task> allItems = taskService.getAllTasks();
-				ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-				List<KeyboardRow> keyboard = new ArrayList<>();
+// 				for (Task item : doneItems) {
+// 					KeyboardRow currentRow = new KeyboardRow();
+// 					currentRow.add(item.getDescription());
+// 					currentRow.add(item.getId() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
+// 					currentRow.add(item.getId() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
+// 					keyboard.add(currentRow);
+// 				}
 
-				// command back to main screen
-				KeyboardRow mainScreenRowTop = new KeyboardRow();
-				mainScreenRowTop.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
-				keyboard.add(mainScreenRowTop);
+// 				// command back to main screen
+// 				KeyboardRow mainScreenRowBottom = new KeyboardRow();
+// 				mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
+// 				keyboard.add(mainScreenRowBottom);
 
-				KeyboardRow firstRow = new KeyboardRow();
-				firstRow.add(BotLabels.ADD_NEW_ITEM.getLabel());
-				keyboard.add(firstRow);
+// 				keyboardMarkup.setKeyboard(keyboard);
 
-				KeyboardRow taskTitleRow = new KeyboardRow();
-				taskTitleRow.add(BotLabels.MY_TODO_LIST.getLabel());
-				keyboard.add(taskTitleRow);
+// 				SendMessage messageToTelegram = new SendMessage();
+// 				messageToTelegram.setChatId(chatId);
+// 				messageToTelegram.setText(BotLabels.MY_TODO_LIST.getLabel());
+// 				messageToTelegram.setReplyMarkup(keyboardMarkup);
 
-				List<Task> activeItems = allItems.stream().filter(item -> item.getStatus() == Status.IN_PROGRESS)
-						.collect(Collectors.toList());
+// 				try {
+// 					execute(messageToTelegram);
+// 				} catch (TelegramApiException e) {
+// 					logger.error(e.getLocalizedMessage(), e);
+// 				}
 
-				for (Task item : activeItems) {
+// 			} else if (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
+// 					|| messageTextFromTelegram.equals(BotLabels.ADD_NEW_ITEM.getLabel())) {
+// 				try {
+// 					SendMessage messageToTelegram = new SendMessage();
+// 					messageToTelegram.setChatId(chatId);
+// 					messageToTelegram.setText(BotMessages.TYPE_NEW_TODO_ITEM.getMessage());
+// 					// hide keyboard
+// 					ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
+// 					messageToTelegram.setReplyMarkup(keyboardMarkup);
 
-					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getDescription());
-					currentRow.add(item.getId() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
-					keyboard.add(currentRow);
-				}
+// 					// send message
+// 					execute(messageToTelegram);
 
-				List<Task> doneItems = allItems.stream().filter(item -> item.getStatus() == Status.COMPLETED)
-						.collect(Collectors.toList());
+// 				} catch (Exception e) {
+// 					logger.error(e.getLocalizedMessage(), e);
+// 				}
 
-				for (Task item : doneItems) {
-					KeyboardRow currentRow = new KeyboardRow();
-					currentRow.add(item.getDescription());
-					currentRow.add(item.getId() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
-					currentRow.add(item.getId() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
-					keyboard.add(currentRow);
-				}
+// 			}
 
-				// command back to main screen
-				KeyboardRow mainScreenRowBottom = new KeyboardRow();
-				mainScreenRowBottom.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
-				keyboard.add(mainScreenRowBottom);
+// 			else {
+// 				try {
+// 					Task newItem = new Task();
+//                     Date currentDate = new Date();
+// 					newItem.setDescription(messageTextFromTelegram);
+//                     newItem.setFecha_inicio(currentDate);
+// 					newItem.setStatus(Status.PENDING);
+// 					taskService.createTask(newItem);
 
-				keyboardMarkup.setKeyboard(keyboard);
+// 					SendMessage messageToTelegram = new SendMessage();
+// 					messageToTelegram.setChatId(chatId);
+// 					messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
 
-				SendMessage messageToTelegram = new SendMessage();
-				messageToTelegram.setChatId(chatId);
-				messageToTelegram.setText(BotLabels.MY_TODO_LIST.getLabel());
-				messageToTelegram.setReplyMarkup(keyboardMarkup);
-
-				try {
-					execute(messageToTelegram);
-				} catch (TelegramApiException e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
-
-			} else if (messageTextFromTelegram.equals(BotCommands.ADD_ITEM.getCommand())
-					|| messageTextFromTelegram.equals(BotLabels.ADD_NEW_ITEM.getLabel())) {
-				try {
-					SendMessage messageToTelegram = new SendMessage();
-					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText(BotMessages.TYPE_NEW_TODO_ITEM.getMessage());
-					// hide keyboard
-					ReplyKeyboardRemove keyboardMarkup = new ReplyKeyboardRemove(true);
-					messageToTelegram.setReplyMarkup(keyboardMarkup);
-
-					// send message
-					execute(messageToTelegram);
-
-				} catch (Exception e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
-
-			}
-
-			else {
-				try {
-					Task newItem = new Task();
-                    Date currentDate = new Date();
-					newItem.setDescription(messageTextFromTelegram);
-                    newItem.setFecha_inicio(currentDate);
-					newItem.setStatus(Status.PENDING);
-					taskService.createTask(newItem);
-
-					SendMessage messageToTelegram = new SendMessage();
-					messageToTelegram.setChatId(chatId);
-					messageToTelegram.setText(BotMessages.NEW_ITEM_ADDED.getMessage());
-
-					execute(messageToTelegram);
-				} catch (Exception e) {
-					logger.error(e.getLocalizedMessage(), e);
-				}
-			}
+// 					execute(messageToTelegram);
+// 				} catch (Exception e) {
+// 					logger.error(e.getLocalizedMessage(), e);
+// 				}
+// 			}
 		}
 	}
 
