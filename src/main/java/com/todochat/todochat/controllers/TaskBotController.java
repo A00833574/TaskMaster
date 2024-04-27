@@ -1,10 +1,7 @@
 package com.todochat.todochat.controllers;
 
 //import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.Date;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,20 +11,11 @@ import org.slf4j.LoggerFactory;
 //import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.RequestBody;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.todochat.todochat.models.Task;
-import com.todochat.todochat.models.enums.Status;
+import org.telegram.telegrambots.meta.api.objects.Update;
+
 import com.todochat.todochat.services.TaskService;
-import com.todochat.todochat.utils.BotCommands;
-import com.todochat.todochat.utils.BotHelper;
-import com.todochat.todochat.utils.BotLabels;
-import com.todochat.todochat.utils.BotMessages;
+
 
 public class TaskBotController extends TelegramLongPollingBot {
 	private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
@@ -41,7 +29,7 @@ public class TaskBotController extends TelegramLongPollingBot {
 		logger.info("Bot name: " + botName);
 		this.taskService = taskService;
 		this.botName = botName;
-		this.botRouter = new BotRouter();
+		this.botRouter = new BotRouter(taskService);
 	}
 
 	@Override

@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
  
-@Service
+
 public class AddTodoCommand implements BotCommand {
     
     private final TaskService taskService;
@@ -50,6 +50,7 @@ public class AddTodoCommand implements BotCommand {
             SendMessage messageToTelegram = new SendMessage();
             messageToTelegram.setChatId(chatId);
             messageToTelegram.setText("Tarea agregada correctamente");
+          
 
             botController.execute(messageToTelegram);
         } catch (Exception e) {
