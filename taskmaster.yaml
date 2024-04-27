@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskmaster
+spec:
+  selector:
+    matchLabels:
+      app: taskmaster
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: taskmaster
+    spec:
+      containers:
+      - name: taskmaster
+        image: qro.ocir.io/axo2xzijkhvb/equipo3/taskmaster:latest
+        imagePullPolicy: Always
+        ports:
+        - name: taskmaster
+          containerPort: 8080
+          protocol: TCP
+      imagePullSecrets:
+        - name: ocirsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: taskmaster-lb
+  labels:
+    app: taskmaster
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+  selector:
+    app: taskmaster
