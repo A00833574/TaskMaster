@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import com.todochat.todochat.controllers.TaskBotController;
-import com.todochat.todochat.services.TaskService;
 import com.todochat.todochat.utils.BotMessages;
 
 @SpringBootApplication
@@ -20,14 +19,17 @@ public class TodochatApplication implements CommandLineRunner{
 
 	private static final Logger logger = LoggerFactory.getLogger(TodochatApplication.class);
 
-	@Autowired
-	private TaskService taskService;
+
 
 	@Value("${telegram.bot.token}")
 	private String telegramBotToken;
 
 	@Value("${telegram.bot.name}")
 	private String botName;
+
+	@Autowired
+    private TaskBotController taskBotController;  // Inyectar el bean gestionado por Spring
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(TodochatApplication.class, args);
@@ -37,7 +39,7 @@ public class TodochatApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		try {
 			TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-			telegramBotsApi.registerBot(new TaskBotController(telegramBotToken, botName, taskService));
+			telegramBotsApi.registerBot(taskBotController);
 			logger.info(BotMessages.BOT_REGISTERED_STARTED.getMessage());
 		} catch (TelegramApiException e) {
 			e.printStackTrace();

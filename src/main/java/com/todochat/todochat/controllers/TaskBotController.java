@@ -5,6 +5,9 @@ package com.todochat.todochat.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 //import org.springframework.http.HttpHeaders;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;
@@ -14,22 +17,24 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import com.todochat.todochat.services.TaskService;
 
 
+@Component
 public class TaskBotController extends TelegramLongPollingBot {
 	private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
-	private TaskService taskService;
-	private String botName;
-	private final BotRouter botRouter;
 
-	public TaskBotController(String botToken, String botName, TaskService taskService) {
+	private String botName;
+
+	@Autowired
+	private BotRouter botRouter;
+
+	public TaskBotController(@Value("${telegram.bot.token}") String botToken,
+	@Value("${telegram.bot.name}") String botName) {
 		super(botToken);
 		logger.info("Bot Token: " + botToken);
 		logger.info("Bot name: " + botName);
-		this.taskService = taskService;
 		this.botName = botName;
-		this.botRouter = new BotRouter(taskService);
+		
 	}
 
 	@Override

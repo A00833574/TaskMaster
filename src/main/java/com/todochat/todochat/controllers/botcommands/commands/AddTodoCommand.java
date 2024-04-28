@@ -12,26 +12,25 @@ import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.Task;
 import com.todochat.todochat.models.enums.Status;
 
-import com.todochat.todochat.utils.BotMessages;
 import com.todochat.todochat.services.TaskService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
  
-
+@Component
 public class AddTodoCommand implements BotCommand {
     
-    private final TaskService taskService;
+    @Autowired
+    private TaskService taskService;
+
 	private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
 
-
-    public AddTodoCommand(TaskService taskService) {
-        this.taskService = taskService;
-    }
+    
 
     @Override
     public void executeCommand(Update update, TaskBotController botController,String[] arguments) {
