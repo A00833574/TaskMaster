@@ -48,7 +48,7 @@ public class AddTodoCommand implements BotCommand {
 
         // Verificamos si hay autenticacion
         if (auth == null) {
-            telegramService.sendMessage("No estas autenticado, por favor usa el comando /login para autenticarte");
+            telegramService.sendMessage("No estas autenticado, por favor usa el comando /loginDev o /loginManager para autenticarte");
             return;
         }
         // Verificamos si la autenticacion es de desarrollador
