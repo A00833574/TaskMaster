@@ -1,18 +1,11 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
 import com.todochat.todochat.models.Task;
-import com.todochat.todochat.models.enums.Status;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.TaskService;
 import com.todochat.todochat.services.TelegramService;
@@ -24,10 +17,8 @@ import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
- 
 @Component
-public class AddTodoCommand implements BotCommand {
-    
+public class DeleteTodoCommand implements BotCommand {
     @Autowired
     private TaskService taskService;
 
@@ -35,8 +26,6 @@ public class AddTodoCommand implements BotCommand {
     private AuthService authService;
 
 	private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
-
-    
 
     @Override
     public void executeCommand(Update update, TaskBotController botController,String[] arguments) {
@@ -58,24 +47,32 @@ public class AddTodoCommand implements BotCommand {
         }
 
         try {
-            Task newItem = new Task();
-            Date currentDate = new Date();
-            newItem.setName(arguments[0]);
-            newItem.setDescription(arguments[1]);
-            newItem.setFecha_inicio(currentDate);
-            newItem.setStatus(Status.PENDING);
-            newItem.setDeveloper(auth.getDeveloper());
-            taskService.createTask(newItem);
+            // Verificamos si hay argumentos
+            if (arguments.length == 0) {
+                telegramService.sendMessage("Por favor ingresa el id de la tarea que deseas eliminar");
+                return;
+            }
+            // Obtenemos el id de la tarea
+            int id = Integer.parseInt(arguments[0]);
+            // Obtenemos la tarea
+            Task task = taskService.getTaskById(id);
+            // Verificamos si la tarea existe
+            if (task == null) {
+                telegramService.sendMessage("La tarea no existe");
+                return;
+            }
+            // Verificamos si la tarea es del usuario autenticado
+            if (task.getDeveloper().getId() != auth.getDeveloper().getId()) {
+                telegramService.sendMessage("No puedes eliminar tareas de otros desarrolladores");
+                return;
+            }
 
-            List<String> commands = new ArrayList<>();
-            commands.add("Regresar a página principal");
-            commands.add("Ver detalles de la tarea");
-            commands.add("Cambiar estatus de la tarea");
-            commands.add("Eliminar la tarea");
-
-            telegramService.sendMessage("Tarea agregada correctamente");
+            // Eliminamos la tarea
+            taskService.deleteTaskById(id);
+            telegramService.sendMessage("Tarea eliminada");
         } catch (Exception e) {
-            logger.error("Error al agregar una tarea", e);
+            logger.error("Error al eliminar tarea",e);
+            telegramService.sendMessage("Error al eliminar tarea");
         }
     }
 }
