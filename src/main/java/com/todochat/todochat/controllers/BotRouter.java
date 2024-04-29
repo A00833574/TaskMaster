@@ -11,6 +11,8 @@ import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LoginDeveloperCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetDevTasksCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetProyectDevsCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
 
 import jakarta.annotation.PostConstruct;
@@ -32,6 +34,12 @@ public class BotRouter {
     public UnknownCommand unknownCommand;
 
     @Autowired
+    public GetDevTasksCommand getDevTasksCommand;
+
+    @Autowired
+    public GetProyectDevsCommand getProyectDevsCommand;
+
+    @Autowired
     public LoginDeveloperCommand loginDeveloperCommand;
 
     @PostConstruct
@@ -39,6 +47,8 @@ public class BotRouter {
         commands.put("/start", startCommand);
         commands.put("Show Main Screen", startCommand);
         commands.put("/login", loginDeveloperCommand);
+        commands.put("/getDevTasks", getDevTasksCommand);
+        commands.put("/getProjectDevs", getProyectDevsCommand);
         
         commands.put("/addTodo", addTodoCommand);
     }
