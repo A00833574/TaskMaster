@@ -1,8 +1,7 @@
 package com.todochat.todochat.models;
 
+import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,36 +9,35 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
+// Este modelo se encargara de guardar que chats y usuarios se encuentran autenticados en el sistema
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Entity
-public class Developer {
+public class AuthToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
-    private String lastname;
-    private String phone;
-    private String mail;
-    private String password; 
-    private String role;
-    
-    @ManyToOne
-    @JoinColumn(name = "proyect_id")
-    @JsonIgnore
-    private Proyect proyect;
+    private String chatId;
+    @Temporal(TemporalType.DATE)
+    private Date fechaVencimiento;
 
-    @OneToMany(mappedBy = "developer")
-    private List<Task> tareas;
+    @ManyToOne
+    @JoinColumn(name = "developer_id")
+    private Developer developer;
+
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
+    
 }

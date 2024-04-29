@@ -3,32 +3,51 @@ package com.todochat.todochat.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.LoginDeveloperCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
-import com.todochat.todochat.services.TaskService;
+
+import jakarta.annotation.PostConstruct;
 
 // Clase encargada de manejar los comandos del bot para permitir escalar y agregar nuevos comandos facilmente
 
+@Component
 public class BotRouter {
     // Instancia
     private final Map<String, BotCommand> commands = new HashMap<>();
-    private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
 
-    public BotRouter(TaskService taskService) {
-        // Aqui definimos los comandos del bot
-        commands.put("/start", new StartCommand());
-        commands.put("Show Main Screen", new StartCommand());
-        commands.put("/addTodo", new AddTodoCommand(taskService));
+    @Autowired
+    public StartCommand startCommand;
+
+    @Autowired
+    public AddTodoCommand addTodoCommand;
+
+    @Autowired
+    public UnknownCommand unknownCommand;
+
+    @Autowired
+    public LoginDeveloperCommand loginDeveloperCommand;
+
+    @PostConstruct
+    public void initCommands() {
+        commands.put("/start", startCommand);
+        commands.put("Show Main Screen", startCommand);
+        commands.put("/login", loginDeveloperCommand);
+        
+        commands.put("/addTodo", addTodoCommand);
     }
 
     public void route(Update update, TaskBotController botController) {
         String messageText = update.getMessage().getText();
+
+        // Eliminar cualquier texto que esté entre paréntesis al inicio del mensaje
+        messageText = messageText.replaceFirst("^\\(.*?\\) ?", "");
 
         // Separar el mensaje completo en partes basadas en "-"
         String[] messageParts = messageText.split("-");
@@ -45,7 +64,7 @@ public class BotRouter {
         }
 
         // Obtener el comando correspondiente, o un comando desconocido si no existe
-        BotCommand command = commands.getOrDefault(commandText, new UnknownCommand());
+        BotCommand command = commands.getOrDefault(commandText, unknownCommand);
 
         // Ejecutar el comando con los argumentos obtenidos
         command.executeCommand(update, botController, arguments);

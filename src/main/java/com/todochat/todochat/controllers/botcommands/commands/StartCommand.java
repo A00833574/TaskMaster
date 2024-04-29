@@ -3,6 +3,7 @@ package com.todochat.todochat.controllers.botcommands.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -12,13 +13,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.utils.BotLabels;
-import com.todochat.todochat.utils.BotMessages;
  
-
+@Component
 public class StartCommand implements BotCommand {
     @Override
     public void executeCommand(Update update, TaskBotController botController,String[] arguments) {
         long chatId = update.getMessage().getChatId();
+        long userId = update.getMessage().getFrom().getId();
 
         SendMessage messageToTelegram = new SendMessage();
         messageToTelegram.setChatId(chatId);
@@ -29,8 +30,11 @@ public class StartCommand implements BotCommand {
 
         // first row
         KeyboardRow row = new KeyboardRow();
+
         row.add(BotLabels.LIST_ALL_ITEMS.getLabel());
         row.add(BotLabels.ADD_NEW_ITEM.getLabel());
+        
+        row.add(0, "");
         // Add the first row to the keyboard
         keyboard.add(row);
 
