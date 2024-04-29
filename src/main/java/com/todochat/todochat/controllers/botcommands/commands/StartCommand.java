@@ -3,6 +3,7 @@ package com.todochat.todochat.controllers.botcommands.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,48 +13,42 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
+import com.todochat.todochat.models.AuthToken;
+import com.todochat.todochat.services.AuthService;
+import com.todochat.todochat.services.TelegramService;
 import com.todochat.todochat.utils.BotLabels;
  
 @Component
 public class StartCommand implements BotCommand {
+
+    @Autowired
+    private AuthService authService;
+
     @Override
     public void executeCommand(Update update, TaskBotController botController,String[] arguments) {
-        long chatId = update.getMessage().getChatId();
-        long userId = update.getMessage().getFrom().getId();
-
-        SendMessage messageToTelegram = new SendMessage();
-        messageToTelegram.setChatId(chatId);
-        messageToTelegram.setText("Selecciona uno de las opciones en el teclado:");
-
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-        List<KeyboardRow> keyboard = new ArrayList<>();
-
-        // first row
-        KeyboardRow row = new KeyboardRow();
-
-        row.add(BotLabels.LIST_ALL_ITEMS.getLabel());
-        row.add(BotLabels.ADD_NEW_ITEM.getLabel());
         
-        row.add(0, "");
-        // Add the first row to the keyboard
-        keyboard.add(row);
+        // Instanciamos nuestro servicio de telegram
+        TelegramService telegramService = new TelegramService(update,botController);
 
-        // second row
-        row = new KeyboardRow();
-        row.add(BotLabels.SHOW_MAIN_SCREEN.getLabel());
-        row.add(BotLabels.HIDE_MAIN_SCREEN.getLabel());
-        keyboard.add(row);
+        // Verificamos si el usuario esta autenticado
+        AuthToken auth = authService.authenticate(update);
 
-        // Set the keyboard
-        keyboardMarkup.setKeyboard(keyboard);
-
-        // Add the keyboard markup
-        messageToTelegram.setReplyMarkup(keyboardMarkup);
-
-        try {
-            botController.execute(messageToTelegram);
-        } catch (TelegramApiException e) {
-            
+        // Si no esta autenticado le decimos que se tiene que autenticar
+        if (auth == null) {
+            telegramService.sendMessage("No te encuentras autenticado, por favor autentícate con el comando /loginDev o /loginManager, por ejemplo /loginDev-correo-contraseña");
+            return;
         }
+
+       
+
+        // Si hay autenticacion verificamos si se trata de un desarollador
+        if(auth.getDeveloper() != null){
+            telegramService.addRow(List.of("(VER MIS TAREAS)/myTasks","(AGREGAR TAREA)/addTask"));
+            telegramService.addRow(List.of("(MODIFICAR MIS DATOS)/profile","(CERRAR SESION)/logout"));
+            telegramService.sendMessage("Bienvenido desarrollador "+auth.getDeveloper().getName()+"\n ¿Que deseas hacer?" + "\n Ver tus tareas: /myTasks \n Agregar una tarea: /addTask-nombreTarea-descripcionTarea " );
+            return;
+        }
+
+
     }
 }
