@@ -48,7 +48,7 @@ public class StartCommand implements BotCommand {
             String message = """
                     Bienvenido desarrollador %s
                     Tus datos:
-                    Nombre completo $s
+                    Nombre completo %s
                     Correo: %s
                     Telefono: %s
                     Rol: %s
