@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.utils.BotLabels;
-import com.todochat.todochat.utils.BotMessages;
  
 @Component
 public class StartCommand implements BotCommand {
@@ -31,8 +30,11 @@ public class StartCommand implements BotCommand {
 
         // first row
         KeyboardRow row = new KeyboardRow();
+
         row.add(BotLabels.LIST_ALL_ITEMS.getLabel());
         row.add(BotLabels.ADD_NEW_ITEM.getLabel());
+        
+        row.add(0, "");
         // Add the first row to the keyboard
         keyboard.add(row);
 

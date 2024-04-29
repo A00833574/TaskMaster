@@ -29,7 +29,6 @@ public class AuthToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String chatId;
-    private String telegramUserId;
     @Temporal(TemporalType.DATE)
     private Date fechaVencimiento;
 

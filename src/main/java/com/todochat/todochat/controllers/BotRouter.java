@@ -9,11 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.LoginDeveloperCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
 
 import jakarta.annotation.PostConstruct;
-
 
 // Clase encargada de manejar los comandos del bot para permitir escalar y agregar nuevos comandos facilmente
 
@@ -21,7 +21,7 @@ import jakarta.annotation.PostConstruct;
 public class BotRouter {
     // Instancia
     private final Map<String, BotCommand> commands = new HashMap<>();
-  
+
     @Autowired
     public StartCommand startCommand;
 
@@ -31,15 +31,23 @@ public class BotRouter {
     @Autowired
     public UnknownCommand unknownCommand;
 
+    @Autowired
+    public LoginDeveloperCommand loginDeveloperCommand;
+
     @PostConstruct
     public void initCommands() {
         commands.put("/start", startCommand);
         commands.put("Show Main Screen", startCommand);
+        commands.put("/login", loginDeveloperCommand);
+        
         commands.put("/addTodo", addTodoCommand);
     }
 
     public void route(Update update, TaskBotController botController) {
         String messageText = update.getMessage().getText();
+
+        // Eliminar cualquier texto que esté entre paréntesis al inicio del mensaje
+        messageText = messageText.replaceFirst("^\\(.*?\\) ?", "");
 
         // Separar el mensaje completo en partes basadas en "-"
         String[] messageParts = messageText.split("-");
