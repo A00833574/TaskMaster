@@ -65,82 +65,99 @@ public class changeStatusCommand implements BotCommand {
 
         try {
 
-            Task task = taskService.getTaskById(Integer.parseInt(arguments[0]));
+            List<Task> tasksList = taskService.getAllTasksByDeveloper(developer.getId());
+            Boolean canSeeTask = false;
             String endDate = "";
             String msgRespuesta = "";
             SimpleDateFormat formatData = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             
             if (arguments.length == 2) {
-                switch (arguments[1]){
-                    case "pending":
-                        if (task.getStatus() != Status.PENDING) { 
-                            task.setStatus(Status.PENDING);
-                            taskService.updateTask(task);
-                            msgRespuesta = "El status de la tarea ha sido actualizada correctamente. Estos son los detalles nuevos de la tarea:";
-                        }
-                        else {
-                            msgRespuesta = "El status que se deseó asignar ya estaba establecido en la tarea. Estos son los detalles de la tarea:";
-                        }
+
+                for (Task t : tasksList) {
+                    if (Integer.parseInt(arguments[0]) == t.getId()) {
+                        canSeeTask = true;
                         break;
-                    case "progress":
-                        if (task.getStatus() != Status.IN_PROGRESS) { 
-                            task.setStatus(Status.IN_PROGRESS);
-                            taskService.updateTask(task); 
-                            msgRespuesta = "El status de la tarea ha sido actualizada correctamente. Estos son los detalles nuevos de la tarea:";
-                        }
-                        else {
-                            msgRespuesta = "El status que se deseó asignar ya estaba establecido en la tarea. Estos son los detalles de la tarea:";
-                        }
-                        break;
-                    case "completed":
-                        if (task.getStatus() != Status.COMPLETED) { 
-                            task.setStatus(Status.COMPLETED);
-                            task.setFecha_finalizacion(new Date());
-                            taskService.updateTask(task);
-                            msgRespuesta = "El status de la tarea ha sido actualizada correctamente. Estos son los detalles nuevos de la tarea:";
-                        }
-                        else {
-                            msgRespuesta = "El status que se deseó asignar ya estaba establecido en la tarea. Estos son los detalles de la tarea:";
-                        }
-                        break;
-                    default:
-                        msgRespuesta = "El valor insertado para la nueva asignación de status no es válida. Recuerda utilizar PENDING, IN_PROGRESS, o COMPLETED como valores para el status. Estos son los detalles de la tarea:";
+                    }
                 }
-                
-                // Se obtiene por string la fecha de finalización almacenada
-                if (task.getFecha_finalizacion() != null) {
-                    endDate = formatData.format(task.getFecha_finalizacion());
+
+                if (canSeeTask == true) {
+                    Task task = taskService.getTaskById(Integer.parseInt(arguments[0]));
+                    switch (arguments[1]){
+                        case "pending":
+                            if (task.getStatus() != Status.PENDING) { 
+                                task.setStatus(Status.PENDING);
+                                taskService.updateTask(task);
+                                msgRespuesta = "El status de la tarea ha sido actualizada correctamente. Estos son los detalles nuevos de la tarea:";
+                            }
+                            else {
+                                msgRespuesta = "El status que se deseó asignar ya estaba establecido en la tarea. Estos son los detalles de la tarea:";
+                            }
+                            break;
+                        case "progress":
+                            if (task.getStatus() != Status.IN_PROGRESS) { 
+                                task.setStatus(Status.IN_PROGRESS);
+                                taskService.updateTask(task); 
+                                msgRespuesta = "El status de la tarea ha sido actualizada correctamente. Estos son los detalles nuevos de la tarea:";
+                            }
+                            else {
+                                msgRespuesta = "El status que se deseó asignar ya estaba establecido en la tarea. Estos son los detalles de la tarea:";
+                            }
+                            break;
+                        case "completed":
+                            if (task.getStatus() != Status.COMPLETED) { 
+                                task.setStatus(Status.COMPLETED);
+                                task.setFecha_finalizacion(new Date());
+                                taskService.updateTask(task);
+                                msgRespuesta = "El status de la tarea ha sido actualizada correctamente. Estos son los detalles nuevos de la tarea:";
+                            }
+                            else {
+                                msgRespuesta = "El status que se deseó asignar ya estaba establecido en la tarea. Estos son los detalles de la tarea:";
+                            }
+                            break;
+                        default:
+                            msgRespuesta = "El valor insertado para la nueva asignación de status no es válida. Recuerda utilizar PENDING, IN_PROGRESS, o COMPLETED como valores para el status. Estos son los detalles de la tarea:";
+                    }
+                    
+                    // Se obtiene por string la fecha de finalización almacenada
+                    if (task.getFecha_finalizacion() != null) {
+                        endDate = formatData.format(task.getFecha_finalizacion());
+                    }
+                    else {
+                        endDate = "Esta tarea no ha sido terminada";
+                    }
+
+                    String message = """
+                            %s
+                            
+                            ID de tarea: %s
+                            Nombre: %s
+                            Descripción: %s
+                            Status: %s
+
+                            Fecha de creación: %s
+                            Fecha de terminación: %s
+
+                            Acciones sugeridas:
+                            Ver tus tareas: /viewTodo
+                            Agregar una tarea: /addTodo-nombreTarea-descripcionTarea
+                            Cambiar estatus de esta tarea: /changeStatus-%s-estatusNuevo    (estatusNuevo: pending | progress | completed)
+                            """.formatted(msgRespuesta, task.getId(), task.getName(), task.getDescription(),
+                            task.getStatus(), formatData.format(task.getFecha_inicio()), endDate, task.getId());
+                    
+                    telegramService.addRow("(VER TAREAS) /listTodo");
+                    telegramService.addRow("(IR A INICIO) /start");
+                    telegramService.sendMessage(message);
                 }
                 else {
-                    endDate = "Esta tarea no ha sido terminada";
+                    telegramService.addRow("(VER TAREAS) /listTodo");
+                    telegramService.addRow("(IR A INICIO) /start");
+                    telegramService.sendMessage("No tienes permiso para editar esta tarea, o la tarea indicada no existe.");
                 }
-
-                String message = """
-                        %s
-                        
-                        ID de tarea: %s
-                        Nombre: %s
-                        Descripción: %s
-                        Status: %s
-
-                        Fecha de creación: %s
-                        Fecha de terminación: %s
-
-                        Acciones sugeridas:
-                        Ver tus tareas: /viewTodo
-                        Agregar una tarea: /addTodo-nombreTarea-descripcionTarea
-                        Cambiar estatus de esta tarea: /changeStatus-%s-estatusNuevo    (estatusNuevo: PENDING | IN_PROGRESS | COMPLETED)
-                        """.formatted(msgRespuesta, task.getId(), task.getName(), task.getDescription(),
-                        task.getStatus(), formatData.format(task.getFecha_inicio()), endDate, task.getId());
-                
-                telegramService.addRow("(VER TAREAS) /listTodo");
-                telegramService.addRow("(IR A INICIO) /start");
-                telegramService.sendMessage(message);
             }
             else {
                 telegramService.addRow("(VER TAREAS) /listTodo");
                 telegramService.addRow("(IR A INICIO) /start");
-                telegramService.sendMessage("Se intentó utilizar /changeStatus sin los argumentos necesarios. Recuerda usar la notación /changeStatus-idTarea-estatusNuevo (estatusNuevo: PENDING | IN_PROGRESS | COMPLETED).");
+                telegramService.sendMessage("Se intentó utilizar /changeStatus sin los argumentos necesarios. Recuerda usar la notación /changeStatus-idTarea-estatusNuevo (estatusNuevo: pending | progress | completed).");
             }
            
         } catch (Exception e) {
