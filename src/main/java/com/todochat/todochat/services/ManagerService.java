@@ -72,4 +72,8 @@ public class ManagerService {
         developerRepository.save(existingDeveloper);
         return "Developer with id " + idDeveloper + " has been assigned to Proyect with id " + idProyect;
     }
+
+    public List<Developer> getDevelopersByProyectId(Integer id) {
+        return developerRepository.findAllByproyectId(id);
+    }
 }

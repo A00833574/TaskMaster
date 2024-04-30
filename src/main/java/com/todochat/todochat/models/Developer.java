@@ -36,7 +36,7 @@ public class Developer {
     private String role;
     
     @ManyToOne
-    @JoinColumn(name = "proyect_id")
+    @JoinColumn(name = "proyectId")
     @JsonIgnore
     private Proyect proyect;
 

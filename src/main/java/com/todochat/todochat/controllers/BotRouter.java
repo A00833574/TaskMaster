@@ -16,6 +16,7 @@ import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
 import com.todochat.todochat.controllers.botcommands.commands.DeleteTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
+import com.todochat.todochat.controllers.botcommands.commands.UnassignedDevelopersCommand;
 
 import jakarta.annotation.PostConstruct;
 
@@ -34,7 +35,8 @@ public class BotRouter {
     public UnknownCommand unknownCommand;
     @Autowired
     public DeleteTodoCommand deleteTodoCommand;
-
+    @Autowired
+    public UnassignedDevelopersCommand unassignedDevelopersCommand;
     @Autowired
     public LoginDeveloperCommand loginDeveloperCommand;
     @Autowired
@@ -60,6 +62,8 @@ public class BotRouter {
         commands.put("/addTodo", addTodoCommand);
         commands.put("/deleteTodo", deleteTodoCommand);
         commands.put("/addTask", addTodoCommand);
+
+        commands.put("/unassignedDevelopers", unassignedDevelopersCommand);
     }
 
     public void route(Update update, TaskBotController botController) {

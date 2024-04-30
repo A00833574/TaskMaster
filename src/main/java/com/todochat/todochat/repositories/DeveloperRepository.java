@@ -6,7 +6,7 @@ import com.todochat.todochat.models.Developer;
 
 public interface DeveloperRepository extends JpaRepository<Developer, Integer> {
     Developer findByMail(String mail);
-    List<Developer> findAllByproyect(int id_proyect);
+    List<Developer> findAllByproyectId(Integer proyectId);
     
 }
 
