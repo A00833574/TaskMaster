@@ -11,8 +11,11 @@ import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.ListTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LoginDeveloperCommand;
+import com.todochat.todochat.controllers.botcommands.commands.LoginManagerCommand;
+import com.todochat.todochat.controllers.botcommands.commands.RegisterManagerCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
+import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
 import com.todochat.todochat.controllers.botcommands.commands.ViewTodoCommand;
 
 import jakarta.annotation.PostConstruct;
@@ -26,7 +29,6 @@ public class BotRouter {
 
     @Autowired
     public StartCommand startCommand;
-
     @Autowired
     public AddTodoCommand addTodoCommand;
 
@@ -35,20 +37,31 @@ public class BotRouter {
 
     @Autowired
     public ViewTodoCommand viewTodoCommand;
-
     @Autowired
     public UnknownCommand unknownCommand;
-
     @Autowired
     public LoginDeveloperCommand loginDeveloperCommand;
+    @Autowired
+    public LoginManagerCommand loginManagerCommand;
+    @Autowired
+    public RegisterManagerCommand registerManagerCommand;
+    @Autowired
+    public RegisterManagerCommand registerDeveloperCommand;
+    @Autowired
+    public LogoutCommand LogoutCommand;
 
     @PostConstruct
     public void initCommands() {
         commands.put("/start", startCommand);
-        commands.put("Show Main Screen", startCommand);
-        commands.put("/login", loginDeveloperCommand);
+
+        commands.put("/loginDev", loginDeveloperCommand);
+        commands.put("/loginManager", loginManagerCommand);
+        commands.put("/logout", LogoutCommand);
+
+        commands.put("/registerManager",registerManagerCommand);
+        commands.put("/registerDeveloper",registerDeveloperCommand);
         
-        commands.put("/addTodo", addTodoCommand);
+        commands.put("/addTask", addTodoCommand);
         commands.put("/listTodo", listTodoCommand);
         commands.put("/viewTodo", viewTodoCommand);
     }

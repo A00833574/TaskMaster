@@ -14,6 +14,8 @@ import com.todochat.todochat.repositories.AuthTokenRepository;
 import com.todochat.todochat.repositories.DeveloperRepository;
 import com.todochat.todochat.repositories.ManagerRepository;
 
+import jakarta.transaction.Transactional;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -52,10 +54,6 @@ public class AuthService {
     // === Este metodo se encargara de hacer login a un manager
     public boolean loginManager(Update update, String mail, String password) {
         String chatId = update.getMessage().getChatId().toString();
-
-
-        logger.debug(mail);
-        logger.debug(password);
 
         // Buscar el manager por mail
         Manager manager = managerRepository.findByMail(mail);
@@ -142,6 +140,25 @@ public class AuthService {
         }
         return token;
     }
+
+    // Función que permite hacer logout
+    @Transactional
+    public void logout(Update update) {
+        String chatId = update.getMessage().getChatId().toString();
+        // Eliminamos todos los tokens que tengan ese chatId
+        authTokenRepository.deleteBychatId(chatId);
+    }
+
+    // == Funcion que permite crear una autenticacion
+    public void createAuthToken(AuthToken token) {
+        // Le colocamos el vencimiento automaticamente
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        Date expirationDate = calendar.getTime();
+        token.setFechaVencimiento(expirationDate);
+        
+        authTokenRepository.save(token);
+    }    
 
 
 }
