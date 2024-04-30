@@ -62,7 +62,6 @@ public class BotRouter {
     @PostConstruct
     public void initCommands() {
         commands.put("/start", startCommand);
-        commands.put("Show Main Screen", startCommand);
         commands.put("/login", loginDeveloperCommand);
         commands.put("/getDevTasks", getDevTasksCommand);
         commands.put("/getProjectDevs", getProyectDevsCommand);
