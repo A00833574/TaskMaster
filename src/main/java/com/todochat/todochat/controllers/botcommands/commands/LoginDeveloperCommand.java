@@ -35,7 +35,7 @@ public class LoginDeveloperCommand implements BotCommand {
 
         // Si el login fue exitoso, enviamos un mensaje de bienvenida
         if (login) {
-            telegramService.addRow(List.of("(VER MIS TAREAS) /myTasks","(AGREGAR TAREA) /addTask"));
+            telegramService.addRow(List.of("(VER MIS TAREAS) /listTodo","(AGREGAR TAREA) /addTask"));
             telegramService.addRow("(IR A INICIO) /start");
 
             telegramService.sendMessage("Haz sido autenticado correctamente");

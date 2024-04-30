@@ -1,6 +1,8 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,6 +13,7 @@ import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
 import com.todochat.todochat.models.Developer;
 import com.todochat.todochat.models.Task;
+import com.todochat.todochat.models.enums.Status;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.TaskService;
 import com.todochat.todochat.services.TelegramService;
@@ -82,6 +85,22 @@ public class ViewTodoCommand implements BotCommand {
                     Cambiar estatus de esta tarea: /changeStatus-%s-estatusNuevo    (estatusNuevo: PENDING | IN_PROGRESS | COMPLETED)
                     """.formatted(task.getId(), task.getName(), task.getDescription(),
                     task.getStatus(), formatData.format(task.getFecha_inicio()), endDate, task.getId());
+            telegramService.addRow("(ELIMINAR TAREA) /deleteTodo-"+task.getId());
+
+           
+            String progressStatus = "(COLOCAR EN PROGRESO " + task.getName() + ") /changeStatus-" + task.getId()+"-progress";
+            String completeStatus = "(COLOCAR COMPLETADO " + task.getName() + ") /changeStatus-" + task.getId()+"-completed";
+
+            List<String> row = new ArrayList<>();
+            if(task.getStatus() == Status.PENDING){
+                row.add(progressStatus);
+            }
+            if(task.getStatus() == Status.IN_PROGRESS){
+                row.add(completeStatus);
+            }
+
+            telegramService.addRow(row);
+            
             telegramService.addRow("(IR A INICIO) /start");
             telegramService.sendMessage(message);
            

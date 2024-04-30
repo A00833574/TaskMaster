@@ -1,5 +1,6 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
 import com.todochat.todochat.models.Developer;
 import com.todochat.todochat.models.Task;
+import com.todochat.todochat.models.enums.Status;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.TaskService;
 import com.todochat.todochat.services.TelegramService;
@@ -66,12 +68,27 @@ public class ListTodoCommand implements BotCommand {
 
                 // Se agregan las tareas enlistadas al teclado
                 for (Task task : tasksList) {
-                    telegramService.addRow("(DETALLES DE " + task.getName() + ") /viewTodo-" + task.getId());
+                    String details = "(DETALLES DE " + task.getName() + ") /viewTodo-" + task.getId();
+                    String progressStatus = "(COLOCAR EN PROGRESO " + task.getName() + ") /changeStatus-" + task.getId()+"-progress";
+                    String completeStatus = "(COLOCAR COMPLETADO " + task.getName() + ") /changeStatus-" + task.getId()+"-completed";
+
+                    List<String> row = new ArrayList<>();
+                    row.add(details);
+                    if(task.getStatus() == Status.PENDING){
+                        row.add(progressStatus);
+                    }
+                    if(task.getStatus() == Status.IN_PROGRESS){
+                        row.add(completeStatus);
+                    }
+
+                    telegramService.addRow(row);
                 }
+
+                telegramService.addRow("(IR A INICIO)/start");
 
                 // Se construye el mensake de texto que regresa el chatbot
                 for (Task task : tasksList) {
-                    tasksMsg = tasksMsg + task.getName() + " --- " + task.getStatus() + "\n";
+                    tasksMsg = tasksMsg +task.getId() + "-" + task.getName() + " --- " + task.getStatus() + "\n";
                 }
                 telegramService.sendMessage("Tareas asignadas a " + developer.getName() + ":\n\n" + tasksMsg + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
 

@@ -43,7 +43,7 @@ public class StartCommand implements BotCommand {
 
             Developer developer = auth.getDeveloper();
 
-            telegramService.addRow(List.of("(VER MIS TAREAS)/myTasks", "(AGREGAR TAREA)/addTask"));
+            telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo", "(AGREGAR TAREA)/addTask"));
             telegramService.addRow(List.of("(MODIFICAR MIS DATOS)/profile", "(CERRAR SESION)/logout"));
             String message = """
                     Bienvenido desarrollador %s
@@ -54,7 +54,7 @@ public class StartCommand implements BotCommand {
                     Rol: %s
 
                     ¿Que deseas hacer?
-                    Ver tus tareas: /myTasks
+                    Ver tus tareas: /listTodo
                     Agregar una tarea: /addTask-nombreTarea-descripcionTarea
                     """.formatted(developer.getName(), developer.getName() + " " + developer.getLastname(),
                     developer.getMail(), developer.getPhone(), developer.getRole());
@@ -81,7 +81,7 @@ public class StartCommand implements BotCommand {
                     Rol: %s
 
                     ¿Que deseas hacer?
-                    Ver tus tareas: /myTasks
+                    Ver tus tareas: /listTodo
                     Agregar una tarea: /addTask-nombreTarea-descripcionTarea
                     """.formatted(manager.getName(), manager.getName() + " " + manager.getLastname(), manager.getMail(),
                     manager.getPhone(), manager.getRole());

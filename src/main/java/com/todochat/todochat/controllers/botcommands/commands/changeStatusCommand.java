@@ -55,6 +55,12 @@ public class changeStatusCommand implements BotCommand {
             return;
         }
 
+        // Si no se pasaran los parametros necesarios se le informa al usuario
+        if (arguments.length < 2) {
+            telegramService.sendMessage("No se pasaron los parametros necesarios para cambiar el status de la tarea. Recuerda usar la notación /changeStatus-<idTarea>-<estatusNuevo (estatusNuevo: pending | progress | completed)>");
+            return;
+        }
+
         Developer developer = auth.getDeveloper();
 
         try {
@@ -66,7 +72,7 @@ public class changeStatusCommand implements BotCommand {
             
             if (arguments.length == 2) {
                 switch (arguments[1]){
-                    case "PENDING":
+                    case "pending":
                         if (task.getStatus() != Status.PENDING) { 
                             task.setStatus(Status.PENDING);
                             taskService.updateTask(task);
@@ -76,7 +82,7 @@ public class changeStatusCommand implements BotCommand {
                             msgRespuesta = "El status que se deseó asignar ya estaba establecido en la tarea. Estos son los detalles de la tarea:";
                         }
                         break;
-                    case "IN_PROGRESS":
+                    case "progress":
                         if (task.getStatus() != Status.IN_PROGRESS) { 
                             task.setStatus(Status.IN_PROGRESS);
                             taskService.updateTask(task); 
@@ -86,7 +92,7 @@ public class changeStatusCommand implements BotCommand {
                             msgRespuesta = "El status que se deseó asignar ya estaba establecido en la tarea. Estos son los detalles de la tarea:";
                         }
                         break;
-                    case "COMPLETED":
+                    case "completed":
                         if (task.getStatus() != Status.COMPLETED) { 
                             task.setStatus(Status.COMPLETED);
                             task.setFecha_finalizacion(new Date());
@@ -126,10 +132,13 @@ public class changeStatusCommand implements BotCommand {
                         Cambiar estatus de esta tarea: /changeStatus-%s-estatusNuevo    (estatusNuevo: PENDING | IN_PROGRESS | COMPLETED)
                         """.formatted(msgRespuesta, task.getId(), task.getName(), task.getDescription(),
                         task.getStatus(), formatData.format(task.getFecha_inicio()), endDate, task.getId());
+                
+                telegramService.addRow("(VER TAREAS) /listTodo");
                 telegramService.addRow("(IR A INICIO) /start");
                 telegramService.sendMessage(message);
             }
             else {
+                telegramService.addRow("(VER TAREAS) /listTodo");
                 telegramService.addRow("(IR A INICIO) /start");
                 telegramService.sendMessage("Se intentó utilizar /changeStatus sin los argumentos necesarios. Recuerda usar la notación /changeStatus-idTarea-estatusNuevo (estatusNuevo: PENDING | IN_PROGRESS | COMPLETED).");
             }
