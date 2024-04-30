@@ -7,6 +7,9 @@ import com.todochat.todochat.models.AuthToken;
 public interface AuthTokenRepository extends JpaRepository<AuthToken, Integer> {
     // Buscar por chat_id y telegram_user_id
     AuthToken findTopBychatId(String chatId);
+
+    // Eliminar los AuthToken de un chatId
+    void deleteBychatId(String chatId);
     
 }
 

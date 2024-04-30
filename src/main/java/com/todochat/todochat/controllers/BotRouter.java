@@ -10,10 +10,13 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LoginDeveloperCommand;
+import com.todochat.todochat.controllers.botcommands.commands.LoginManagerCommand;
+import com.todochat.todochat.controllers.botcommands.commands.RegisterManagerCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.GetDevTasksCommand;
 import com.todochat.todochat.controllers.botcommands.commands.GetProyectDevsCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
+import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
 
 import jakarta.annotation.PostConstruct;
 
@@ -26,13 +29,10 @@ public class BotRouter {
 
     @Autowired
     public StartCommand startCommand;
-
     @Autowired
     public AddTodoCommand addTodoCommand;
-
     @Autowired
     public UnknownCommand unknownCommand;
-
     @Autowired
     public GetDevTasksCommand getDevTasksCommand;
 
@@ -41,6 +41,14 @@ public class BotRouter {
 
     @Autowired
     public LoginDeveloperCommand loginDeveloperCommand;
+    @Autowired
+    public LoginManagerCommand loginManagerCommand;
+    @Autowired
+    public RegisterManagerCommand registerManagerCommand;
+    @Autowired
+    public RegisterManagerCommand registerDeveloperCommand;
+    @Autowired
+    public LogoutCommand LogoutCommand;
 
     @PostConstruct
     public void initCommands() {
@@ -49,8 +57,15 @@ public class BotRouter {
         commands.put("/login", loginDeveloperCommand);
         commands.put("/getDevTasks", getDevTasksCommand);
         commands.put("/getProjectDevs", getProyectDevsCommand);
+
+        commands.put("/loginDev", loginDeveloperCommand);
+        commands.put("/loginManager", loginManagerCommand);
+        commands.put("/logout", LogoutCommand);
+
+        commands.put("/registerManager",registerManagerCommand);
+        commands.put("/registerDeveloper",registerDeveloperCommand);
         
-        commands.put("/addTodo", addTodoCommand);
+        commands.put("/addTask", addTodoCommand);
     }
 
     public void route(Update update, TaskBotController botController) {
