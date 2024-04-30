@@ -13,6 +13,7 @@ import com.todochat.todochat.models.Proyect;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.ManagerService;
 import com.todochat.todochat.services.ProyectService;
+import com.todochat.todochat.services.DeveloperService;
 import com.todochat.todochat.services.TelegramService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class RemoveDeveloperCommand implements BotCommand {
 
     @Autowired
     private ProyectService proyectService;
+
+    @Autowired
+    private DeveloperService developerService;
 
     @Autowired
     private ManagerService managerService;
@@ -57,26 +61,27 @@ public class RemoveDeveloperCommand implements BotCommand {
         }
 
         try {
-            int developerIndex = Integer.parseInt(arguments[0]) - 1;
+            int developerId = Integer.parseInt(arguments[0]);
+            Developer developer = developerService.getDeveloperById(developerId);
+
+            if (developer == null) {
+                telegramService.sendMessage("Developer no encontrado.");
+                return;
+            }
+
             Proyect managerProject = proyectService.getProyectByManagerId(auth.getManager().getId());
-
-            if (managerProject == null) {
-                telegramService.sendMessage("No hay proyectos asociados a tu cuenta.");
+             if (managerProject == null) {
+                telegramService.sendMessage("No hay projectos asociados con este manager.");
                 return;
             }
 
-            List<Developer> developers = managerProject.getDevelopers();
-            if (developerIndex < 0 || developerIndex >= developers.size()) {
-                telegramService.sendMessage("Indice invalido.");
-                return;
-            }
-
-            Developer developer = developers.get(developerIndex);
-            String message = managerService.removeDeveloperFromProject(managerProject.getId(), developer.getId());
+            managerService.removeDeveloperFromProject(managerProject.getId(), developer.getId());
+            String message = String.format("Developer %s %s ha sido eliminado del proyecto %s.", developer.getName(), developer.getLastname(), managerProject.getName());
             telegramService.sendMessage(message);
-            
+
         } catch (NumberFormatException e) {
             telegramService.sendMessage("Indice invalido. Por favor agregar un indice.");
+       
         } catch (Exception e) {
             logger.error("Error removing developer from project", e);
             telegramService.sendMessage("Error borrando developer del projecto.");

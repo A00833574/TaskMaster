@@ -1,7 +1,5 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
-import java.util.List;
-
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -61,10 +59,13 @@ public class AddDeveloperCommand implements BotCommand {
         }
 
         try {
-            int developerIndex = Integer.parseInt(arguments[0]) - 1;
+            int developerId = Integer.parseInt(arguments[0]);
+            Developer developer = developerService.getDeveloperById(developerId);
 
-            List<Developer> developers = developerService.getAllDevelopers();
-            Developer developer = developers.get(developerIndex);
+            if (developer == null) {
+                telegramService.sendMessage("Developer not found.");
+                return;
+            }
 
             Proyect managerProyect = proyectService.getProyectByManagerId(auth.getManager().getId());
             if (managerProyect == null) {
@@ -73,10 +74,10 @@ public class AddDeveloperCommand implements BotCommand {
             }
 
             managerService.assignProyect(managerProyect.getId(), developer.getId());
-            String successMessage = String.format("Desarrollador %s %s ha sido agregado exitosamente al proyecto %s.", developer.getName(), developer.getLastname(), managerProyect.getName());
-            telegramService.sendMessage(successMessage);
+            String message = String.format("Desarrollador %s %s ha sido agregado exitosamente al proyecto %s.",developer.getName(), developer.getLastname(), managerProyect.getName());
+            telegramService.sendMessage(message);
         }
-        catch (NumberFormatException | IndexOutOfBoundsException e) {
+        catch (NumberFormatException e) {
             telegramService.sendMessage("Índice de desarrollador inválido. Por favor, inténtalo de nuevo.");
 
         } catch (Exception e) {
