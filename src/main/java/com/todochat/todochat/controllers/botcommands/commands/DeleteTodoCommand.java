@@ -1,17 +1,11 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
 import com.todochat.todochat.models.Task;
-import com.todochat.todochat.models.enums.Status;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.TaskService;
 import com.todochat.todochat.services.TelegramService;
@@ -23,10 +17,8 @@ import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
- 
 @Component
-public class AddTodoCommand implements BotCommand {
-    
+public class DeleteTodoCommand implements BotCommand {
     @Autowired
     private TaskService taskService;
 
@@ -34,8 +26,6 @@ public class AddTodoCommand implements BotCommand {
     private AuthService authService;
 
 	private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
-
-    
 
     @Override
     public void executeCommand(Update update, TaskBotController botController,String[] arguments) {
@@ -47,7 +37,7 @@ public class AddTodoCommand implements BotCommand {
 
         // Verificamos si hay autenticacion
         if (auth == null) {
-            telegramService.sendMessage("No estas autenticado, por favor usa el comando /loginDev o /loginManager para autenticarte");
+            telegramService.sendMessage("No estas autenticado, por favor usa el comando /login para autenticarte");
             return;
         }
         // Verificamos si la autenticacion es de desarrollador
@@ -57,28 +47,37 @@ public class AddTodoCommand implements BotCommand {
         }
 
         try {
-            Task newItem = new Task();
-            Date currentDate = new Date();
+            int id;
             try {
-                newItem.setName(arguments[0]);
-                newItem.setDescription(arguments[1]);
+                id = Integer.parseInt(arguments[0]);
             } catch (Exception e) {
-                telegramService.sendMessage("El comando debe tener el siguiente formato: /addTodo-<nombre>-<descripcion>.");
+                telegramService.sendMessage("El comando debe tener el siguiente formato: /deleteTodo-<id>. Para ver sus tareas usa /listTodo");
+                return;
+            }
+            // Obtenemos la tarea
+            Task task = taskService.getTaskById(id);
+            // Verificamos si la tarea existe
+            if (task == null) {
+                telegramService.sendMessage("La tarea no existe");
+                return;
+            }
+            // Verificamos si la tarea es del usuario autenticado
+            if (task.getDeveloper().getId() != auth.getDeveloper().getId()) {
+                telegramService.sendMessage("No puedes eliminar tareas de otros desarrolladores");
                 return;
             }
 
-            newItem.setFecha_inicio(currentDate);
-            newItem.setStatus(Status.PENDING);
-            newItem.setDeveloper(auth.getDeveloper());
-            taskService.createTask(newItem);
+            // Eliminamos la tarea
+            taskService.deleteTaskById(id);
 
-            telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo", "(AGREGAR TAREA)/addTodo"));
-            telegramService.addRow(List.of("(ELIMINAR TAREA) /deleteTodo", "(CAMBIAR ESTADO TAREA) /changeStatus"));
+            telegramService.addRow("(VER TAREAS) /listTodo");
+            telegramService.addRow("(AGREGAR TAREA) /addTodo");
+            telegramService.addRow("(CAMBIAR ESTADO TAREA) /changeStatus");
             telegramService.addRow("(IR A INICIO)/start");
-
-            telegramService.sendMessage("Tarea agregada correctamente");
+            telegramService.sendMessage("Tarea eliminada");
         } catch (Exception e) {
-            logger.error("Error al agregar una tarea", e);
+            logger.error("Error al eliminar tarea",e);
+            telegramService.sendMessage("Error al eliminar tarea");
         }
     }
 }

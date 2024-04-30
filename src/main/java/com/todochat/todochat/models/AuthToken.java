@@ -33,11 +33,11 @@ public class AuthToken {
     private Date fechaVencimiento;
 
     @ManyToOne
-    @JoinColumn(name = "developer_id")
+    @JoinColumn(name = "developerId")
     private Developer developer;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id")
+    @JoinColumn(name = "managerId")
     private Manager manager;
     
 }

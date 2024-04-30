@@ -9,10 +9,23 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ListTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LoginDeveloperCommand;
+import com.todochat.todochat.controllers.botcommands.commands.LoginManagerCommand;
+import com.todochat.todochat.controllers.botcommands.commands.RegisterManagerCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetDevTasksCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetProjectDevsCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ListProjectTasksCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetProjectDevsCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
-import com.todochat.todochat.controllers.botcommands.commands.AddProyectCommand;
+import com.todochat.todochat.controllers.botcommands.commands.DeleteTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
+import com.todochat.todochat.controllers.botcommands.commands.MyProjectCommand;
+import com.todochat.todochat.controllers.botcommands.commands.UnassignedDevelopersCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ViewTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.changeStatusCommand;
+import com.todochat.todochat.controllers.botcommands.commands.AddProjectCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddDeveloperCommand;
 import com.todochat.todochat.controllers.botcommands.commands.RemoveDeveloperCommand;
 
@@ -27,15 +40,27 @@ public class BotRouter {
 
     @Autowired
     public StartCommand startCommand;
-
     @Autowired
     public AddTodoCommand addTodoCommand;
-
+    @Autowired
+    public ListTodoCommand listTodoCommand;
+    @Autowired
+    public changeStatusCommand changeStatusCommand;
+    @Autowired
+    public ViewTodoCommand viewTodoCommand;
     @Autowired
     public UnknownCommand unknownCommand;
+    @Autowired
+    public DeleteTodoCommand deleteTodoCommand;
+    @Autowired
+    public UnassignedDevelopersCommand unassignedDevelopersCommand;
+    public GetDevTasksCommand getDevTasksCommand;
 
     @Autowired
-    public AddProyectCommand addProyectCommand;
+    public GetProjectDevsCommand getProjectDevsCommand;
+
+    @Autowired
+    public AddProjectCommand addProjectCommand;
 
     @Autowired
     public AddDeveloperCommand addDeveloperCommand;
@@ -45,15 +70,45 @@ public class BotRouter {
 
     @Autowired
     public LoginDeveloperCommand loginDeveloperCommand;
+    @Autowired
+    public LoginManagerCommand loginManagerCommand;
+    @Autowired
+    public RegisterManagerCommand registerManagerCommand;
+    @Autowired
+    public RegisterManagerCommand registerDeveloperCommand;
+    @Autowired
+    public LogoutCommand LogoutCommand;
+    @Autowired
+    public MyProjectCommand myProjectCommand;
+    @Autowired
+    public ListProjectTasksCommand listProjectTasksCommand;
 
     @PostConstruct
     public void initCommands() {
         commands.put("/start", startCommand);
-        commands.put("Show Main Screen", startCommand);
         commands.put("/login", loginDeveloperCommand);
+        commands.put("/getDevTasks", getDevTasksCommand);
+        commands.put("/getProjectDevs", getProjectDevsCommand);
+
+        commands.put("/loginDev", loginDeveloperCommand);
+        commands.put("/loginManager", loginManagerCommand);
+        commands.put("/logout", LogoutCommand);
+
+        commands.put("/registerManager",registerManagerCommand);
+        commands.put("/registerDeveloper",registerDeveloperCommand);
+        
+        commands.put("/deleteTodo", deleteTodoCommand);
+        commands.put("/addTask", addTodoCommand);
+
+        commands.put("/unassignedDevs", unassignedDevelopersCommand);
+        commands.put("/listTodo", listTodoCommand);
+        commands.put("/viewTodo", viewTodoCommand);
+        commands.put("/projectTasks", listProjectTasksCommand);
+        commands.put("/changeStatus", changeStatusCommand);
     
         commands.put("/addTodo", addTodoCommand);
-        commands.put("/addProyect", addProyectCommand);
+        commands.put("/addProject", addProjectCommand);
+        commands.put("/myProject", myProjectCommand);
         commands.put("/addDeveloper", addDeveloperCommand);
         commands.put("/removeDeveloper", removeDeveloperCommand);
     }

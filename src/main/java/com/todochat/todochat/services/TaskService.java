@@ -20,6 +20,13 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
+    public List<Task> getAllTasksByDeveloper(Integer id) {
+        return taskRepository.findAllBydeveloperId(id);
+    }
+    public List<Task> getAllTasksByProject(Integer id) {
+        return taskRepository.findAllByprojectId(id);
+    }
+
     public Task createTask(Task task) {
         return taskRepository.save(task);
     }
