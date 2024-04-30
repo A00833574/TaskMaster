@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
+import com.todochat.todochat.models.Manager;
 import com.todochat.todochat.models.Project;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.ProjectService;
@@ -43,17 +44,13 @@ public class GetProjectDevsCommand implements BotCommand {
             return;
         }
 
-        // Verificamos si el comando tiene argumentos
-        if (arguments.length == 0) {
-            telegramService.sendMessage("/getProjectDevs-[id del projecto]");
-            return;
-        }
+        // Obtenemos el manager
+        Manager manager = auth.getManager();
 
-        // Obtenemos el id del projecto
-        int projectId = Integer.parseInt(arguments[0]);
+        // Obtenemos el proyecto del manager
+        Project project = manager.getProjects().get(0);
 
-        // Obtenemos el projecto
-        Project project = projectService.getProjectById(projectId);
+        
 
         if (project == null) {
             telegramService.sendMessage("Projecto no encontrado");
