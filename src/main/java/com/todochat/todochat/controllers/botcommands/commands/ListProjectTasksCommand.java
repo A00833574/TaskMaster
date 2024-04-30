@@ -1,6 +1,5 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
-import com.todochat.todochat.models.Developer;
 import com.todochat.todochat.models.Manager;
 import com.todochat.todochat.models.Project;
 import com.todochat.todochat.models.Task;
-import com.todochat.todochat.models.enums.Status;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.TaskService;
 import com.todochat.todochat.services.TelegramService;
@@ -58,7 +55,7 @@ public class ListProjectTasksCommand implements BotCommand {
 
         Manager manager = auth.getManager();
 
-        // Obtenemos el projecto del manager
+        // Obtenemos el proyecto del manager
         Project project = manager.getProjects().get(0);
 
         try {
@@ -67,7 +64,7 @@ public class ListProjectTasksCommand implements BotCommand {
             String tasksMsg = "";
             
             if (tasksList.isEmpty()){
-                telegramService.sendMessage("El projecto no cuenta con ninguna tarea.");
+                telegramService.sendMessage("El proyecto no cuenta con ninguna tarea.");
             }
             else {
 
@@ -85,7 +82,7 @@ public class ListProjectTasksCommand implements BotCommand {
                 for (Task task : tasksList) {
                     tasksMsg = tasksMsg +task.getId() + "-" + task.getName() + " --- " + task.getStatus() + "\n";
                 }
-                telegramService.sendMessage("Tareas asignadas del projecto " + project.getName() + ":\n\n" + tasksMsg + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
+                telegramService.sendMessage("Tareas asignadas del proyecto " + project.getName() + ":\n\n" + tasksMsg + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
 
             }
            

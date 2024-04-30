@@ -35,16 +35,16 @@ public class MyProjectCommand implements BotCommand{
 
         // Verificamos si es un manager
         if(auth.getManager() == null){
-            telegramService.sendMessage("Debes autenticarte como manager para poder ver tu projecto");
+            telegramService.sendMessage("Debes autenticarte como manager para poder ver tu proyecto");
             return;
         }
 
-        // Obtenemos el projecto del manager
+        // Obtenemos el proyecto del manager
         List<Project> projects = auth.getManager().getProjects();
         Project project = projects.get(0);
 
         String message = """
-                Tu projecto
+                Tu proyecto
                 Id: %s
                 Nombre: %s
                

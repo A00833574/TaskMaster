@@ -17,7 +17,7 @@ import com.todochat.todochat.services.TelegramService;
 
 @Component
 public class GetDevTasksCommand implements BotCommand {
-    
+
     @Autowired
     private AuthService authService;
 
@@ -68,19 +68,21 @@ public class GetDevTasksCommand implements BotCommand {
             return;
         }
 
-        // Mostramos las tareas
-        StringBuilder message = new StringBuilder("Tareas asignadas:\n");
+        // Se agregan las tareas enlistadas al teclado
         for (Task task : tasks) {
-            message.append(task.toString()).append("\n");
+            String details = "(DETALLES DE " + task.getName() + ") /viewTodo-" + task.getId();
+            
+
+            telegramService.addRow(details);
         }
 
-        List<String> commands = List.of(
-            "(Agregar tarea)/addTask-titulo-descripcion-prioridad",
-            "(Eliminar tarea)/deleteTask-id"
-        );
-
-        telegramService.addRow(commands);
-
-        telegramService.sendMessage(message.toString());
+        telegramService.addRow("(IR A INICIO)/start");
+        String tasksMsg = "";
+        // Se construye el mensake de texto que regresa el chatbot
+        for (Task task : tasks) {
+            tasksMsg = tasksMsg + task.getId() + "-" + task.getName() + " --- " + task.getStatus() + "\n";
+        }
+        telegramService.sendMessage("Tareas asignadas a " + developer.getName() + ":\n\n" + tasksMsg
+                + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
     }
 }

@@ -82,13 +82,13 @@ public class ManagerService {
             return "No se encontro developer.";
         }
         if (developer.getProject() == null || developer.getProject().getId() != projectId) {
-            return "El developer no esta asignado a este projecto";
+            return "El developer no esta asignado a este proyecto";
         }
         String developerName = developer.getName() + " " + developer.getLastname();
         String projectName = developer.getProject().getName();
         developer.setProject(null);
         developerRepository.save(developer);
-        return String.format("Developer %s has been successfully removed from the project %s.", developerName, projectName);
+        return String.format("El desarrollador %s ha sido eliminado del proyecto %s.", developerName, projectName);
     }
 
 }

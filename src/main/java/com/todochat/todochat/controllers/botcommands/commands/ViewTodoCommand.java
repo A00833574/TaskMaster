@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
-import com.todochat.todochat.models.Developer;
 import com.todochat.todochat.models.Task;
 import com.todochat.todochat.models.enums.Status;
 import com.todochat.todochat.services.AuthService;
@@ -49,11 +48,9 @@ public class ViewTodoCommand implements BotCommand {
             telegramService.sendMessage("No estas autenticado, por favor usa el comando /login para autenticarte");
             return;
         }
-        // Verificamos si la autenticacion es de desarrollador
-        if (auth.getDeveloper() == null) {
-            telegramService.sendMessage("Necesitas autenticacion de desarrollador para agregar tareas");
-            return;
-        }
+
+        
+       
 
         try {
 
@@ -85,9 +82,12 @@ public class ViewTodoCommand implements BotCommand {
                     Cambiar estatus de esta tarea: /changeStatus-%s-estatusNuevo    (estatusNuevo: PENDING | IN_PROGRESS | COMPLETED)
                     """.formatted(task.getId(), task.getName(), task.getDescription(),
                     task.getStatus(), formatData.format(task.getFecha_inicio()), endDate, task.getId());
-            telegramService.addRow("(ELIMINAR TAREA) /deleteTodo-"+task.getId());
 
-           
+            // Solo si es desarollador habilitamos la opcion de eliminar la tarea
+            if (auth.getDeveloper() != null) {
+                telegramService.addRow("(ELIMINAR TAREA) /deleteTodo-"+task.getId());
+            }
+              
             String progressStatus = "(COLOCAR EN PROGRESO " + task.getName() + ") /changeStatus-" + task.getId()+"-progress";
             String completeStatus = "(COLOCAR COMPLETADO " + task.getName() + ") /changeStatus-" + task.getId()+"-completed";
 
@@ -99,7 +99,11 @@ public class ViewTodoCommand implements BotCommand {
                 row.add(completeStatus);
             }
 
-            telegramService.addRow(row);
+            // Solo si es desarollador habilitamos la opcion de cambiar el estatus
+            if (auth.getDeveloper() != null) {
+                telegramService.addRow(row);
+            }
+           
             
             telegramService.addRow("(IR A INICIO) /start");
             telegramService.sendMessage(message);
