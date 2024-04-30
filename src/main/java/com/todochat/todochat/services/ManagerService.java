@@ -76,4 +76,19 @@ public class ManagerService {
     public List<Developer> getDevelopersByProyectId(Integer id) {
         return developerRepository.findAllByproyectId(id);
     }
+    public String removeDeveloperFromProject(int projectId, int developerId) {
+        Developer developer = developerRepository.findById(developerId).orElse(null);
+        if (developer == null) {
+            return "No se encontro developer.";
+        }
+        if (developer.getProyect() == null || developer.getProyect().getId() != projectId) {
+            return "El developer no esta asignado a este proyecto";
+        }
+        String developerName = developer.getName() + " " + developer.getLastname();
+        String projectName = developer.getProyect().getName();
+        developer.setProyect(null);
+        developerRepository.save(developer);
+        return String.format("Developer %s has been successfully removed from the project %s.", developerName, projectName);
+    }
+
 }

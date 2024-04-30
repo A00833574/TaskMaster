@@ -22,6 +22,9 @@ import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnassignedDevelopersCommand;
 import com.todochat.todochat.controllers.botcommands.commands.ViewTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.changeStatusCommand;
+import com.todochat.todochat.controllers.botcommands.commands.AddProyectCommand;
+import com.todochat.todochat.controllers.botcommands.commands.AddDeveloperCommand;
+import com.todochat.todochat.controllers.botcommands.commands.RemoveDeveloperCommand;
 
 import jakarta.annotation.PostConstruct;
 
@@ -52,6 +55,15 @@ public class BotRouter {
 
     @Autowired
     public GetProyectDevsCommand getProyectDevsCommand;
+
+    @Autowired
+    public AddProyectCommand addProyectCommand;
+
+    @Autowired
+    public AddDeveloperCommand addDeveloperCommand;
+
+    @Autowired
+    public RemoveDeveloperCommand removeDeveloperCommand;
 
     @Autowired
     public LoginDeveloperCommand loginDeveloperCommand;
@@ -86,6 +98,11 @@ public class BotRouter {
         commands.put("/listTodo", listTodoCommand);
         commands.put("/viewTodo", viewTodoCommand);
         commands.put("/changeStatus", changeStatusCommand);
+    
+        commands.put("/addTodo", addTodoCommand);
+        commands.put("/addProyect", addProyectCommand);
+        commands.put("/addDeveloper", addProyectCommand);
+        commands.put("/removeDeveloper", removeDeveloperCommand);
     }
 
     public void route(Update update, TaskBotController botController) {
