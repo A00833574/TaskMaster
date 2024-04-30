@@ -2,6 +2,7 @@ package com.todochat.todochat.controllers.botcommands.commands;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
@@ -67,7 +68,10 @@ public class UnassignedDevelopersCommand implements BotCommand {
                 message.append("\n");
             }
 
-            telegramService.addRow("(AGREGAR DESARROLLADOR)/");
+            for (Developer developer : unassignedDevelopers) {
+                telegramService.addRow("(ASIGNAR A " + developer.getName() + ") /assignDev-" + developer.getId());
+            }
+            telegramService.addRow("(IR A INICIO)/start");
             telegramService.sendMessage(message.toString());
         } catch (Exception e) {
             logger.error("Error al eliminar tarea",e);

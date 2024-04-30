@@ -59,18 +59,22 @@ public class AddTodoCommand implements BotCommand {
         try {
             Task newItem = new Task();
             Date currentDate = new Date();
-            newItem.setName(arguments[0]);
-            newItem.setDescription(arguments[1]);
+            try {
+                newItem.setName(arguments[0]);
+                newItem.setDescription(arguments[1]);
+            } catch (Exception e) {
+                telegramService.sendMessage("El comando debe tener el siguiente formato: /addTodo-<nombre>-<descripcion>.");
+                return;
+            }
+
             newItem.setFecha_inicio(currentDate);
             newItem.setStatus(Status.PENDING);
             newItem.setDeveloper(auth.getDeveloper());
             taskService.createTask(newItem);
 
-            List<String> commands = new ArrayList<>();
-            commands.add("Regresar a página principal");
-            commands.add("Ver detalles de la tarea");
-            commands.add("Cambiar estatus de la tarea");
-            commands.add("Eliminar la tarea");
+            telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo", "(AGREGAR TAREA)/addTodo"));
+            telegramService.addRow(List.of("(ELIMINAR TAREA) /deleteTodo", "(CAMBIAR ESTADO TAREA) /changeStatus"));
+            telegramService.addRow("(IR A INICIO)/start");
 
             telegramService.sendMessage("Tarea agregada correctamente");
         } catch (Exception e) {

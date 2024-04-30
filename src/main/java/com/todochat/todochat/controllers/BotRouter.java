@@ -82,7 +82,7 @@ public class BotRouter {
         commands.put("/deleteTodo", deleteTodoCommand);
         commands.put("/addTask", addTodoCommand);
 
-        commands.put("/unassignedDevelopers", unassignedDevelopersCommand);
+        commands.put("/unassignedDevs", unassignedDevelopersCommand);
         commands.put("/listTodo", listTodoCommand);
         commands.put("/viewTodo", viewTodoCommand);
         commands.put("/changeStatus", changeStatusCommand);

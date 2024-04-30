@@ -47,13 +47,13 @@ public class DeleteTodoCommand implements BotCommand {
         }
 
         try {
-            // Verificamos si hay argumentos
-            if (arguments.length == 0) {
-                telegramService.sendMessage("Por favor ingresa el id de la tarea que deseas eliminar");
+            int id;
+            try {
+                id = Integer.parseInt(arguments[0]);
+            } catch (Exception e) {
+                telegramService.sendMessage("El comando debe tener el siguiente formato: /deleteTodo-<id>. Para ver sus tareas usa /listTodo");
                 return;
             }
-            // Obtenemos el id de la tarea
-            int id = Integer.parseInt(arguments[0]);
             // Obtenemos la tarea
             Task task = taskService.getTaskById(id);
             // Verificamos si la tarea existe
@@ -69,6 +69,11 @@ public class DeleteTodoCommand implements BotCommand {
 
             // Eliminamos la tarea
             taskService.deleteTaskById(id);
+
+            telegramService.addRow("(VER TAREAS) /listTodo");
+            telegramService.addRow("(AGREGAR TAREA) /addTodo");
+            telegramService.addRow("(CAMBIAR ESTADO TAREA) /changeStatus");
+            telegramService.addRow("(IR A INICIO)/start");
             telegramService.sendMessage("Tarea eliminada");
         } catch (Exception e) {
             logger.error("Error al eliminar tarea",e);
