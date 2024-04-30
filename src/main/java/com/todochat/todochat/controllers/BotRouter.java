@@ -54,7 +54,7 @@ public class BotRouter {
     
         commands.put("/addTodo", addTodoCommand);
         commands.put("/addProyect", addProyectCommand);
-        commands.put("/addDeveloper", addProyectCommand);
+        commands.put("/addDeveloper", addDeveloperCommand);
         commands.put("/removeDeveloper", removeDeveloperCommand);
     }
 
