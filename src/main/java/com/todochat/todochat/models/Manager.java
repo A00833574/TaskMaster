@@ -33,5 +33,5 @@ public class Manager {
     private String role;
     
     @OneToMany(mappedBy = "manager")
-    private List<Proyect> proyects;
+    private List<Project> projects;
 }

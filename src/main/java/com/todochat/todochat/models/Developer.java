@@ -36,9 +36,9 @@ public class Developer {
     private String role;
     
     @ManyToOne
-    @JoinColumn(name = "proyect_id")
+    @JoinColumn(name = "project_id")
     @JsonIgnore
-    private Proyect proyect;
+    private Project project;
 
     @OneToMany(mappedBy = "developer")
     private List<Task> tareas;

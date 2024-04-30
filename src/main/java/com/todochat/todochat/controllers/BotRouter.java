@@ -14,7 +14,7 @@ import com.todochat.todochat.controllers.botcommands.commands.LoginManagerComman
 import com.todochat.todochat.controllers.botcommands.commands.RegisterManagerCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.GetDevTasksCommand;
-import com.todochat.todochat.controllers.botcommands.commands.GetProyectDevsCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetProjectDevsCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
 
@@ -37,7 +37,7 @@ public class BotRouter {
     public GetDevTasksCommand getDevTasksCommand;
 
     @Autowired
-    public GetProyectDevsCommand getProyectDevsCommand;
+    public GetProjectDevsCommand getProjectDevsCommand;
 
     @Autowired
     public LoginDeveloperCommand loginDeveloperCommand;
@@ -56,7 +56,7 @@ public class BotRouter {
         commands.put("Show Main Screen", startCommand);
         commands.put("/login", loginDeveloperCommand);
         commands.put("/getDevTasks", getDevTasksCommand);
-        commands.put("/getProjectDevs", getProyectDevsCommand);
+        commands.put("/getProjectDevs", getProjectDevsCommand);
 
         commands.put("/loginDev", loginDeveloperCommand);
         commands.put("/loginManager", loginManagerCommand);

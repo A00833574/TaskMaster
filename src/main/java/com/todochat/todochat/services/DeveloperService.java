@@ -46,7 +46,7 @@ public class DeveloperService {
         existingDeveloper.setMail(developer.getMail());
         existingDeveloper.setPassword(passwordEncoder.encode(developer.getPassword()));
         existingDeveloper.setRole(developer.getRole());
-        existingDeveloper.setProyect(developer.getProyect());
+        existingDeveloper.setProject(developer.getProject());
         existingDeveloper.setTareas(developer.getTareas());
         
         return developerRepository.save(existingDeveloper);

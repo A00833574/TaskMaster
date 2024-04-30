@@ -23,16 +23,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Entity
-public class Proyect {
+public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     
-    @OneToMany(mappedBy = "proyect")
+    @OneToMany(mappedBy = "project")
     private List<Developer> developers;
 
-    @OneToMany(mappedBy = "proyect")
+    @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 
     @ManyToOne

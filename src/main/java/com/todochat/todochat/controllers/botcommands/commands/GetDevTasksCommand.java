@@ -38,14 +38,14 @@ public class GetDevTasksCommand implements BotCommand {
         }
 
         // Verificamos si la autenticacion es de manager
-        if (authService.authenticate(update).getDeveloper() == null) {
-            telegramService.sendMessage("Necesitas autenticacion de desarrollador para ver tus tareas");
+        if (auth.getManager() == null) {
+            telegramService.sendMessage("Necesitas autenticacion de manager para ver las tareas de un desarrollador");
             return;
         }
 
         // Verificamos si el comando tiene argumentos
         if (arguments.length == 0) {
-            telegramService.sendMessage("/getDevTasks [id del desarrollador]");
+            telegramService.sendMessage("/getDevTasks-[id del desarrollador]");
             return;
         }
 
@@ -64,7 +64,7 @@ public class GetDevTasksCommand implements BotCommand {
         List<Task> tasks = developerService.getTasksByDeveloperId(developerId);
 
         if (tasks.isEmpty()) {
-            telegramService.sendMessage("No tienes tareas asignadas");
+            telegramService.sendMessage("Este desarrollador no tiene tareas asignadas");
             return;
         }
 
