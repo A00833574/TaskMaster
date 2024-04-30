@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ListTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LoginDeveloperCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LoginManagerCommand;
 import com.todochat.todochat.controllers.botcommands.commands.RegisterManagerCommand;
@@ -17,6 +18,8 @@ import com.todochat.todochat.controllers.botcommands.commands.GetDevTasksCommand
 import com.todochat.todochat.controllers.botcommands.commands.GetProyectDevsCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ViewTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.changeStatusCommand;
 
 import jakarta.annotation.PostConstruct;
 
@@ -31,6 +34,12 @@ public class BotRouter {
     public StartCommand startCommand;
     @Autowired
     public AddTodoCommand addTodoCommand;
+    @Autowired
+    public ListTodoCommand listTodoCommand;
+    @Autowired
+    public changeStatusCommand changeStatusCommand;
+    @Autowired
+    public ViewTodoCommand viewTodoCommand;
     @Autowired
     public UnknownCommand unknownCommand;
     @Autowired
@@ -53,7 +62,6 @@ public class BotRouter {
     @PostConstruct
     public void initCommands() {
         commands.put("/start", startCommand);
-        commands.put("Show Main Screen", startCommand);
         commands.put("/login", loginDeveloperCommand);
         commands.put("/getDevTasks", getDevTasksCommand);
         commands.put("/getProjectDevs", getProyectDevsCommand);
@@ -66,6 +74,9 @@ public class BotRouter {
         commands.put("/registerDeveloper",registerDeveloperCommand);
         
         commands.put("/addTask", addTodoCommand);
+        commands.put("/listTodo", listTodoCommand);
+        commands.put("/viewTodo", viewTodoCommand);
+        commands.put("/changeStatus", changeStatusCommand);
     }
 
     public void route(Update update, TaskBotController botController) {

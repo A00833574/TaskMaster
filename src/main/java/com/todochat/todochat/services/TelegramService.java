@@ -51,7 +51,12 @@ public class TelegramService {
 
     // Metodo para limpiar la tabla
     public void clearRow() {
-        this.keyboardMarkup = new ReplyKeyboardMarkup();
+        if (this.keyboardMarkup != null) {
+            this.keyboardMarkup.setKeyboard(new ArrayList<>());
+        } else {
+            this.keyboardMarkup = new ReplyKeyboardMarkup();
+            this.keyboardMarkup.setKeyboard(new ArrayList<>());
+        }
     }
 
     // Método para enviar un mensaje

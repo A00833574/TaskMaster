@@ -43,10 +43,10 @@ public class Task {
     private Date fecha_finalizacion;
 
     @ManyToOne
-    @JoinColumn(name = "developer_id")
+    @JoinColumn(name = "developerId")
     private Developer developer;
 
     @ManyToOne
-    @JoinColumn(name = "proyect_id")
+    @JoinColumn(name = "proyectId")
     private Proyect proyect;
 }
