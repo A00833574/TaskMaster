@@ -69,7 +69,7 @@ public class UnassignedDevelopersCommand implements BotCommand {
             }
 
             for (Developer developer : unassignedDevelopers) {
-                telegramService.addRow("(ASIGNAR A " + developer.getName() + ") /assignDev-" + developer.getId());
+                telegramService.addRow("(ASIGNAR A " + developer.getName() + ") /addDeveloper-" + developer.getId());
             }
             telegramService.addRow("(IR A INICIO)/start");
             telegramService.sendMessage(message.toString());

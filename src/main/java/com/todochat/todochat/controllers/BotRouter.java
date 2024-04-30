@@ -16,9 +16,11 @@ import com.todochat.todochat.controllers.botcommands.commands.RegisterManagerCom
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.GetDevTasksCommand;
 import com.todochat.todochat.controllers.botcommands.commands.GetProyectDevsCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ListProjectTasksCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
 import com.todochat.todochat.controllers.botcommands.commands.DeleteTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
+import com.todochat.todochat.controllers.botcommands.commands.MyProjectCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnassignedDevelopersCommand;
 import com.todochat.todochat.controllers.botcommands.commands.ViewTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.changeStatusCommand;
@@ -75,6 +77,10 @@ public class BotRouter {
     public RegisterManagerCommand registerDeveloperCommand;
     @Autowired
     public LogoutCommand LogoutCommand;
+    @Autowired
+    public MyProjectCommand myProjectCommand;
+    @Autowired
+    public ListProjectTasksCommand listProjectTasksCommand;
 
     @PostConstruct
     public void initCommands() {
@@ -90,18 +96,19 @@ public class BotRouter {
         commands.put("/registerManager",registerManagerCommand);
         commands.put("/registerDeveloper",registerDeveloperCommand);
         
-        commands.put("/addTodo", addTodoCommand);
         commands.put("/deleteTodo", deleteTodoCommand);
         commands.put("/addTask", addTodoCommand);
 
         commands.put("/unassignedDevs", unassignedDevelopersCommand);
         commands.put("/listTodo", listTodoCommand);
         commands.put("/viewTodo", viewTodoCommand);
+        commands.put("/projectTasks", listProjectTasksCommand);
         commands.put("/changeStatus", changeStatusCommand);
     
         commands.put("/addTodo", addTodoCommand);
         commands.put("/addProyect", addProyectCommand);
-        commands.put("/addDeveloper", addProyectCommand);
+        commands.put("/myProject", myProjectCommand);
+        commands.put("/addDeveloper", addDeveloperCommand);
         commands.put("/removeDeveloper", removeDeveloperCommand);
     }
 

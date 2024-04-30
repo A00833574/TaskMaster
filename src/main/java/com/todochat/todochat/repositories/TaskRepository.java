@@ -7,5 +7,6 @@ import com.todochat.todochat.models.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Integer> {
     List<Task> findAllBydeveloperId(Integer developerId);
+    List<Task> findAllByproyectId(Integer developerId);
 }
 
