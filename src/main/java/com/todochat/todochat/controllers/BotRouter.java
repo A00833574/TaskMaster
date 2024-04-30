@@ -9,9 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ListTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LoginDeveloperCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ViewTodoCommand;
 
 import jakarta.annotation.PostConstruct;
 
@@ -29,6 +31,12 @@ public class BotRouter {
     public AddTodoCommand addTodoCommand;
 
     @Autowired
+    public ListTodoCommand listTodoCommand;
+
+    @Autowired
+    public ViewTodoCommand viewTodoCommand;
+
+    @Autowired
     public UnknownCommand unknownCommand;
 
     @Autowired
@@ -41,6 +49,8 @@ public class BotRouter {
         commands.put("/login", loginDeveloperCommand);
         
         commands.put("/addTodo", addTodoCommand);
+        commands.put("/listTodo", listTodoCommand);
+        commands.put("/viewTodo", viewTodoCommand);
     }
 
     public void route(Update update, TaskBotController botController) {
