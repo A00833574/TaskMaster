@@ -53,6 +53,12 @@ public class AddProyectCommand implements BotCommand {
             return;
         }
 
+        // Verificamos si el manager ya tiene un proyecto
+        if (auth.getManager().getProyects().size() > 0) {
+            telegramService.sendMessage("Ya tienes un proyecto creado, no puedes tener mas de un proyecto");
+            return;
+        }
+
         try {
             Proyect newItem = new Proyect();
             newItem.setName(arguments[0]);
