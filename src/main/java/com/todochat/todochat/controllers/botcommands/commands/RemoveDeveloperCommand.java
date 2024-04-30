@@ -1,7 +1,5 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
-import java.util.List;
-
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -12,7 +10,7 @@ import com.todochat.todochat.models.Developer;
 import com.todochat.todochat.models.Project;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.ManagerService;
-import com.todochat.todochat.services.ProyectService;
+import com.todochat.todochat.services.ProjectService;
 import com.todochat.todochat.services.DeveloperService;
 import com.todochat.todochat.services.TelegramService;
 
@@ -69,7 +67,7 @@ public class RemoveDeveloperCommand implements BotCommand {
                 return;
             }
 
-            Proyect managerProject = proyectService.getProyectByManagerId(auth.getManager().getId());
+            Project managerProject = projectService.getProjectByManagerId(auth.getManager().getId());
              if (managerProject == null) {
                 telegramService.sendMessage("No hay projectos asociados con este manager.");
                 return;
