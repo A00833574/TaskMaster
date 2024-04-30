@@ -9,14 +9,19 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ListTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LoginDeveloperCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LoginManagerCommand;
 import com.todochat.todochat.controllers.botcommands.commands.RegisterManagerCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetDevTasksCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetProyectDevsCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
 import com.todochat.todochat.controllers.botcommands.commands.DeleteTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnassignedDevelopersCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ViewTodoCommand;
+import com.todochat.todochat.controllers.botcommands.commands.changeStatusCommand;
 
 import jakarta.annotation.PostConstruct;
 
@@ -32,11 +37,22 @@ public class BotRouter {
     @Autowired
     public AddTodoCommand addTodoCommand;
     @Autowired
+    public ListTodoCommand listTodoCommand;
+    @Autowired
+    public changeStatusCommand changeStatusCommand;
+    @Autowired
+    public ViewTodoCommand viewTodoCommand;
+    @Autowired
     public UnknownCommand unknownCommand;
     @Autowired
     public DeleteTodoCommand deleteTodoCommand;
     @Autowired
     public UnassignedDevelopersCommand unassignedDevelopersCommand;
+    public GetDevTasksCommand getDevTasksCommand;
+
+    @Autowired
+    public GetProyectDevsCommand getProyectDevsCommand;
+
     @Autowired
     public LoginDeveloperCommand loginDeveloperCommand;
     @Autowired
@@ -51,6 +67,9 @@ public class BotRouter {
     @PostConstruct
     public void initCommands() {
         commands.put("/start", startCommand);
+        commands.put("/login", loginDeveloperCommand);
+        commands.put("/getDevTasks", getDevTasksCommand);
+        commands.put("/getProjectDevs", getProyectDevsCommand);
 
         commands.put("/loginDev", loginDeveloperCommand);
         commands.put("/loginManager", loginManagerCommand);
@@ -64,6 +83,9 @@ public class BotRouter {
         commands.put("/addTask", addTodoCommand);
 
         commands.put("/unassignedDevelopers", unassignedDevelopersCommand);
+        commands.put("/listTodo", listTodoCommand);
+        commands.put("/viewTodo", viewTodoCommand);
+        commands.put("/changeStatus", changeStatusCommand);
     }
 
     public void route(Update update, TaskBotController botController) {

@@ -67,10 +67,10 @@ public class StartCommand implements BotCommand {
 
             Manager manager = auth.getManager();
 
-            telegramService.addRow(List.of("(CREAR PROYECTO)/createProject", "(VER MI PROYECTO)/myProject"));
+            telegramService.addRow(List.of("(CREAR PROYECTO) /createProject", "(VER MI PROYECTO) /myProject"));
             telegramService
-                    .addRow(List.of("(VER DESARROLLADORES)/listDevelopers", "(VER TAREAS DE PROYECTO)/projectTasks"));
-            telegramService.addRow("(IR A INICIO)/start");
+                    .addRow(List.of("(VER DESARROLLADORES) /listDevelopers", "(VER TAREAS DE PROYECTO) /projectTasks"));
+            telegramService.addRow("(IR A INICIO) /start");
 
             String message = """
                     Bienvenido manager %s

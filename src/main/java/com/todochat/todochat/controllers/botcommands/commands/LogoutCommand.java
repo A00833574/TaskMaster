@@ -23,6 +23,8 @@ public class LogoutCommand implements BotCommand{
         // Ejecutamos el metodo de logout
         authService.logout(update);
 
+        telegramService.clearRow();
+        
         // Enviamos un mensaje de despedida
         telegramService.sendMessage("Haz cerrado sesion correctamente \n Puede iniciar sesion nuevamente con el comando /loginDev o /loginManager, por ejemplo /loginDev-correo-contraseña");
 
