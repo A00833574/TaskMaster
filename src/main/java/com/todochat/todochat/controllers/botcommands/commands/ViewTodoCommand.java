@@ -2,7 +2,8 @@ package com.todochat.todochat.controllers.botcommands.commands;
 
 import java.text.SimpleDateFormat;
 
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.todochat.todochat.controllers.TaskBotController;
@@ -13,9 +14,6 @@ import com.todochat.todochat.models.Task;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.TaskService;
 import com.todochat.todochat.services.TelegramService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 
 import org.slf4j.Logger;
@@ -54,8 +52,6 @@ public class ViewTodoCommand implements BotCommand {
             return;
         }
 
-        Developer developer = auth.getDeveloper();
-
         try {
 
             Task task = taskService.getTaskById(Integer.parseInt(arguments[0]));
@@ -78,15 +74,15 @@ public class ViewTodoCommand implements BotCommand {
                     Status: %s
 
                     Fecha de creación: %s
-                    Fecha de terminación: $s
+                    Fecha de terminación: %s
 
                     Acciones sugeridas:
                     Ver tus tareas: /viewTodo
                     Agregar una tarea: /addTodo-nombreTarea-descripcionTarea
-                    Cambiar estatus de esta tarea: /changeTodoStatus-$s-estatusNuevo    (estatusNuevo: PENDING | IN_PROGRESS | COMPLETED)
-                    """.formatted(task.getId(), task.getName() + task.getDescription(),
+                    Cambiar estatus de esta tarea: /changeStatus-%s-estatusNuevo    (estatusNuevo: PENDING | IN_PROGRESS | COMPLETED)
+                    """.formatted(task.getId(), task.getName(), task.getDescription(),
                     task.getStatus(), formatData.format(task.getFecha_inicio()), endDate, task.getId());
-
+            telegramService.addRow("(IR A INICIO) /start");
             telegramService.sendMessage(message);
            
         } catch (Exception e) {

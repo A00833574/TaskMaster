@@ -2,7 +2,8 @@ package com.todochat.todochat.controllers.botcommands.commands;
 
 import java.util.List;
 
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.todochat.todochat.controllers.TaskBotController;
@@ -13,9 +14,6 @@ import com.todochat.todochat.models.Task;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.TaskService;
 import com.todochat.todochat.services.TelegramService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 
 import org.slf4j.Logger;
@@ -66,16 +64,16 @@ public class ListTodoCommand implements BotCommand {
             }
             else {
 
+                // Se agregan las tareas enlistadas al teclado
+                for (Task task : tasksList) {
+                    telegramService.addRow("(DETALLES DE " + task.getName() + ") /viewTodo-" + task.getId());
+                }
+
                 // Se construye el mensake de texto que regresa el chatbot
                 for (Task task : tasksList) {
                     tasksMsg = tasksMsg + task.getName() + " --- " + task.getStatus() + "\n";
                 }
-                telegramService.sendMessage("Tareas asignadas a " + developer.getName() + ":\n\n" + tasksMsg + "\nEscribe '/viewTodo-nombre de tarea' para desplegar los detalles de una tarea.");
-
-                // Se agregan las tareas enlistadas al teclado
-                for (Task task : tasksList) {
-                    telegramService.addRow("(*DETALLES DE " + task.getName() + "*) /viewTodo-" + task.getId());
-                }
+                telegramService.sendMessage("Tareas asignadas a " + developer.getName() + ":\n\n" + tasksMsg + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
 
             }
            
