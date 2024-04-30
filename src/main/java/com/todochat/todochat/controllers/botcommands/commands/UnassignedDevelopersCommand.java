@@ -50,7 +50,7 @@ public class UnassignedDevelopersCommand implements BotCommand {
 
         try {
             // Obtenemos la tarea
-            List<Developer> unassignedDevelopers = managerService.getDevelopersByProyectId(null);
+            List<Developer> unassignedDevelopers = managerService.getDevelopersByProjectId(null);
             // Verificamos si la tarea existe
             if (unassignedDevelopers.size() == 0) {
                 telegramService.sendMessage("Por el momento no hay desarrolladores disponibles.");

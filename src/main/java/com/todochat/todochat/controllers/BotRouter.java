@@ -15,8 +15,9 @@ import com.todochat.todochat.controllers.botcommands.commands.LoginManagerComman
 import com.todochat.todochat.controllers.botcommands.commands.RegisterManagerCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.GetDevTasksCommand;
-import com.todochat.todochat.controllers.botcommands.commands.GetProyectDevsCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetProjectDevsCommand;
 import com.todochat.todochat.controllers.botcommands.commands.ListProjectTasksCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetProjectDevsCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
 import com.todochat.todochat.controllers.botcommands.commands.DeleteTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
@@ -24,7 +25,7 @@ import com.todochat.todochat.controllers.botcommands.commands.MyProjectCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnassignedDevelopersCommand;
 import com.todochat.todochat.controllers.botcommands.commands.ViewTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.changeStatusCommand;
-import com.todochat.todochat.controllers.botcommands.commands.AddProyectCommand;
+import com.todochat.todochat.controllers.botcommands.commands.AddProjectCommand;
 import com.todochat.todochat.controllers.botcommands.commands.AddDeveloperCommand;
 import com.todochat.todochat.controllers.botcommands.commands.RemoveDeveloperCommand;
 
@@ -56,10 +57,10 @@ public class BotRouter {
     public GetDevTasksCommand getDevTasksCommand;
 
     @Autowired
-    public GetProyectDevsCommand getProyectDevsCommand;
+    public GetProjectDevsCommand getProjectDevsCommand;
 
     @Autowired
-    public AddProyectCommand addProyectCommand;
+    public AddProjectCommand addProjectCommand;
 
     @Autowired
     public AddDeveloperCommand addDeveloperCommand;
@@ -87,7 +88,7 @@ public class BotRouter {
         commands.put("/start", startCommand);
         commands.put("/login", loginDeveloperCommand);
         commands.put("/getDevTasks", getDevTasksCommand);
-        commands.put("/getProjectDevs", getProyectDevsCommand);
+        commands.put("/getProjectDevs", getProjectDevsCommand);
 
         commands.put("/loginDev", loginDeveloperCommand);
         commands.put("/loginManager", loginManagerCommand);
@@ -106,7 +107,7 @@ public class BotRouter {
         commands.put("/changeStatus", changeStatusCommand);
     
         commands.put("/addTodo", addTodoCommand);
-        commands.put("/addProyect", addProyectCommand);
+        commands.put("/addProject", addProjectCommand);
         commands.put("/myProject", myProjectCommand);
         commands.put("/addDeveloper", addDeveloperCommand);
         commands.put("/removeDeveloper", removeDeveloperCommand);

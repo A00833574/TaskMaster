@@ -8,9 +8,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
-import com.todochat.todochat.models.Proyect;
+import com.todochat.todochat.models.Project;
 import com.todochat.todochat.services.AuthService;
-import com.todochat.todochat.services.ProyectService;
+import com.todochat.todochat.services.ProjectService;
 import com.todochat.todochat.services.TelegramService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ import org.slf4j.LoggerFactory;
 
  
 @Component
-public class AddProyectCommand implements BotCommand {
+public class AddProjectCommand implements BotCommand {
     
     @Autowired
-    private ProyectService proyectService;
+    private ProjectService proyectService;
 
     @Autowired
     private AuthService authService;
@@ -54,20 +54,20 @@ public class AddProyectCommand implements BotCommand {
         }
 
         // Verificamos si el manager ya tiene un proyecto
-        if (auth.getManager().getProyects().size() > 0) {
+        if (auth.getManager().getProjects().size() > 0) {
             telegramService.sendMessage("Ya tienes un proyecto creado, no puedes tener mas de un proyecto");
             return;
         }
 
         try {
-            Proyect newItem = new Proyect();
+            Project newItem = new Project();
             newItem.setName(arguments[0]);
             newItem.setManager(auth.getManager());
-            proyectService.createProyect(newItem);
+            proyectService.createProject(newItem);
 
             // TODO: Agregar opciones de teclado
 
-            telegramService.sendMessage("Proyecto agregado correctamente, puedes agregar tareas con /addTodo, agregar developers con /addDeveloper y ver el estado del proyecto con /showProyect");
+            telegramService.sendMessage("Projecto agregado correctamente, puedes agregar tareas con /addTodo, agregar developers con /addDeveloper y ver el estado del proyecto con /showProject");
 
            
         } catch (Exception e) {

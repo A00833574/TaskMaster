@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
-import com.todochat.todochat.models.Proyect;
+import com.todochat.todochat.models.Project;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.TelegramService;
 
@@ -35,21 +35,21 @@ public class MyProjectCommand implements BotCommand{
 
         // Verificamos si es un manager
         if(auth.getManager() == null){
-            telegramService.sendMessage("Debes autenticarte como manager para poder ver tu proyecto");
+            telegramService.sendMessage("Debes autenticarte como manager para poder ver tu projecto");
             return;
         }
 
-        // Obtenemos el proyecto del manager
-        List<Proyect> proyects = auth.getManager().getProyects();
-        Proyect proyect = proyects.get(0);
+        // Obtenemos el projecto del manager
+        List<Project> projects = auth.getManager().getProjects();
+        Project project = projects.get(0);
 
         String message = """
-                Tu proyecto
+                Tu projecto
                 Id: %s
                 Nombre: %s
                
 
-                """.formatted(proyect.getId(),proyect.getName());
+                """.formatted(project.getId(),project.getName());
 
         telegramService.sendMessage(message);
     }

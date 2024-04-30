@@ -1,7 +1,7 @@
-echo "Limpiando proyecto Mauven antiguo..."
+echo "Limpiando projecto Mauven antiguo..."
 call mvn clean
-echo "Compilando nuevo proyecto Mauven..."
+echo "Compilando nuevo projecto Mauven..."
 call mvn compile
-echo "Empaquetando el nuevo proyecto Mauven..."
+echo "Empaquetando el nuevo projecto Mauven..."
 call mvn package -DskipTests
-echo "El proyecto esta listo para ser ejecutado con SpringBoot."
+echo "El projecto esta listo para ser ejecutado con SpringBoot."

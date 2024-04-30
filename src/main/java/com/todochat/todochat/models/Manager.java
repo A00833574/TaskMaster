@@ -34,5 +34,5 @@ public class Manager {
     private String role;
     
     @OneToMany(mappedBy = "manager",fetch = FetchType.EAGER)
-    private List<Proyect> proyects;
+    private List<Project> projects;
 }

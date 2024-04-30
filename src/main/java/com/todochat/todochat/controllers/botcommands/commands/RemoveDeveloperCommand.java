@@ -9,10 +9,10 @@ import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
 import com.todochat.todochat.models.Developer;
-import com.todochat.todochat.models.Proyect;
+import com.todochat.todochat.models.Project;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.ManagerService;
-import com.todochat.todochat.services.ProyectService;
+import com.todochat.todochat.services.ProjectService;
 import com.todochat.todochat.services.TelegramService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class RemoveDeveloperCommand implements BotCommand {
 
     @Autowired
-    private ProyectService proyectService;
+    private ProjectService projectService;
 
     @Autowired
     private ManagerService managerService;
@@ -52,16 +52,16 @@ public class RemoveDeveloperCommand implements BotCommand {
         }
         // Verificamos si la autenticacion es de desarrollador
         if (auth.getDeveloper() == null) {
-            telegramService.sendMessage("Necesitas autenticacion de desarrollador para agregar proyectos");
+            telegramService.sendMessage("Necesitas autenticacion de desarrollador para agregar projectos");
             return;
         }
 
         try {
             int developerIndex = Integer.parseInt(arguments[0]) - 1;
-            Proyect managerProject = proyectService.getProyectByManagerId(auth.getManager().getId());
+            Project managerProject = projectService.getProjectByManagerId(auth.getManager().getId());
 
             if (managerProject == null) {
-                telegramService.sendMessage("No hay proyectos asociados a tu cuenta.");
+                telegramService.sendMessage("No hay projectos asociados a tu cuenta.");
                 return;
             }
 

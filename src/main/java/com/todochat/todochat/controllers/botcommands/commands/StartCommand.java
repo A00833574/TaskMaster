@@ -70,7 +70,7 @@ public class StartCommand implements BotCommand {
 
 
             List<String> firstRow = new ArrayList<>();
-            if(manager.getProyects().size() == 0){
+            if(manager.getProjects().size() == 0){
                 firstRow.add("(CREAR PROYECTO) /createProject");
             }else{
                 firstRow.add("(VER MI PROYECTO) /myProject");

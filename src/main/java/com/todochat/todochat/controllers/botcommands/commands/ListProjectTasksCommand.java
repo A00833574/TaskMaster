@@ -12,7 +12,7 @@ import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
 import com.todochat.todochat.models.Developer;
 import com.todochat.todochat.models.Manager;
-import com.todochat.todochat.models.Proyect;
+import com.todochat.todochat.models.Project;
 import com.todochat.todochat.models.Task;
 import com.todochat.todochat.models.enums.Status;
 import com.todochat.todochat.services.AuthService;
@@ -58,16 +58,16 @@ public class ListProjectTasksCommand implements BotCommand {
 
         Manager manager = auth.getManager();
 
-        // Obtenemos el proyecto del manager
-        Proyect proyect = manager.getProyects().get(0);
+        // Obtenemos el projecto del manager
+        Project project = manager.getProjects().get(0);
 
         try {
 
-            List<Task> tasksList = taskService.getAllTasksByProject(proyect.getId());
+            List<Task> tasksList = taskService.getAllTasksByProject(project.getId());
             String tasksMsg = "";
             
             if (tasksList.isEmpty()){
-                telegramService.sendMessage("El proyecto no cuenta con ninguna tarea.");
+                telegramService.sendMessage("El projecto no cuenta con ninguna tarea.");
             }
             else {
 
@@ -85,7 +85,7 @@ public class ListProjectTasksCommand implements BotCommand {
                 for (Task task : tasksList) {
                     tasksMsg = tasksMsg +task.getId() + "-" + task.getName() + " --- " + task.getStatus() + "\n";
                 }
-                telegramService.sendMessage("Tareas asignadas del proyecto " + proyect.getName() + ":\n\n" + tasksMsg + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
+                telegramService.sendMessage("Tareas asignadas del projecto " + project.getName() + ":\n\n" + tasksMsg + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
 
             }
            

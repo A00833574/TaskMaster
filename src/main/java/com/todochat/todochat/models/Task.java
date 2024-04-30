@@ -47,6 +47,6 @@ public class Task {
     private Developer developer;
 
     @ManyToOne
-    @JoinColumn(name = "proyectId")
-    private Proyect proyect;
+    @JoinColumn(name = "projectId")
+    private Project project;
 }

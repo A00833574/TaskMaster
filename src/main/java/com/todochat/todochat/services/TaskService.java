@@ -24,7 +24,7 @@ public class TaskService {
         return taskRepository.findAllBydeveloperId(id);
     }
     public List<Task> getAllTasksByProject(Integer id) {
-        return taskRepository.findAllByproyectId(id);
+        return taskRepository.findAllByprojectId(id);
     }
 
     public Task createTask(Task task) {

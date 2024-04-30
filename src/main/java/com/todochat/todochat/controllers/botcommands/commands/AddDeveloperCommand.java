@@ -9,10 +9,10 @@ import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
 import com.todochat.todochat.models.Developer;
-import com.todochat.todochat.models.Proyect;
+import com.todochat.todochat.models.Project;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.ManagerService;
-import com.todochat.todochat.services.ProyectService;
+import com.todochat.todochat.services.ProjectService;
 import com.todochat.todochat.services.DeveloperService;
 import com.todochat.todochat.services.TelegramService;
 
@@ -31,7 +31,7 @@ public class AddDeveloperCommand implements BotCommand {
     private DeveloperService developerService;
 
     @Autowired
-    private ProyectService proyectService;
+    private ProjectService projectService;
 
     @Autowired
     private ManagerService managerService;
@@ -56,7 +56,7 @@ public class AddDeveloperCommand implements BotCommand {
         }
         // Verificamos si la autenticacion es de desarrollador
         if (auth.getManager() == null) {
-            telegramService.sendMessage("Necesitas autenticacion de manager para asignar desarrolladores a proyectos.");
+            telegramService.sendMessage("Necesitas autenticacion de manager para asignar desarrolladores a projectos.");
             return;
         }
 
@@ -66,14 +66,14 @@ public class AddDeveloperCommand implements BotCommand {
             List<Developer> developers = developerService.getAllDevelopers();
             Developer developer = developers.get(developerIndex);
 
-            Proyect managerProyect = proyectService.getProyectByManagerId(auth.getManager().getId());
-            if (managerProyect == null) {
-                telegramService.sendMessage("No se encontró un proyecto asociado a tu cuenta de manager.");
+            Project managerProject = projectService.getProjectByManagerId(auth.getManager().getId());
+            if (managerProject == null) {
+                telegramService.sendMessage("No se encontró un projecto asociado a tu cuenta de manager.");
             return;
             }
 
-            managerService.assignProyect(managerProyect.getId(), developer.getId());
-            String successMessage = String.format("Desarrollador %s %s ha sido agregado exitosamente al proyecto %s.", developer.getName(), developer.getLastname(), managerProyect.getName());
+            managerService.assignProject(managerProject.getId(), developer.getId());
+            String successMessage = String.format("Desarrollador %s %s ha sido agregado exitosamente al projecto %s.", developer.getName(), developer.getLastname(), managerProject.getName());
             telegramService.sendMessage(successMessage);
         }
         catch (NumberFormatException | IndexOutOfBoundsException e) {
@@ -81,7 +81,7 @@ public class AddDeveloperCommand implements BotCommand {
 
         } catch (Exception e) {
             logger.error("Error while adding developer to project", e);
-            telegramService.sendMessage("Error al agregar el desarrollador al proyecto.");
+            telegramService.sendMessage("Error al agregar el desarrollador al projecto.");
         }
     }
 }
