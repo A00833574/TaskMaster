@@ -61,7 +61,7 @@ public class GetDevTasksCommand implements BotCommand {
         }
 
         // Obtenemos las tareas del desarrollador
-        List<Task> tasks = developerService.getTasksByDeveloperId(developerId);
+        List<Task> tasks = developer.getTareas();
 
         if (tasks.isEmpty()) {
             telegramService.sendMessage("Este desarrollador no tiene tareas asignadas");

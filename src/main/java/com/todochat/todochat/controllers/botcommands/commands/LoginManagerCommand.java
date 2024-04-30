@@ -32,9 +32,9 @@ public class LoginManagerCommand implements BotCommand {
 
         // Si el login fue exitoso, enviamos un mensaje de bienvenida
         if (login) {
-            telegramService.addRow(List.of("(CREAR PROYECTO)/createProject", "(VER MI PROYECTO)/myProject"));
+            telegramService.addRow(List.of("(CREAR PROYECTO)/addProject", "(VER MI PROYECTO)/myProject"));
             telegramService
-                    .addRow(List.of("(VER DESARROLLADORES)/listDevelopers", "(VER TAREAS DE PROYECTO)/projectTasks"));
+                    .addRow(List.of("(VER DESARROLLADORES)/getProjectDevs", "(VER TAREAS DE PROYECTO)/projectTasks"));
             telegramService.addRow("(IR A INICIO)/start");
 
             telegramService.sendMessage("Haz sido autenticado correctamente");

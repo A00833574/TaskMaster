@@ -71,7 +71,7 @@ public class StartCommand implements BotCommand {
 
             List<String> firstRow = new ArrayList<>();
             if(manager.getProjects().size() == 0){
-                firstRow.add("(CREAR PROYECTO) /createProject");
+                firstRow.add("(CREAR PROYECTO) /addProject");
             }else{
                 firstRow.add("(VER MI PROYECTO) /myProject");
                 firstRow.add("(VER TAREAS DE PROYECTO) /projectTasks");
@@ -79,7 +79,7 @@ public class StartCommand implements BotCommand {
 
             telegramService.addRow(firstRow);
             telegramService
-                    .addRow(List.of("(VER DESARROLLADORES) /listDevelopers","(VER DESAROLLADORES PENDIENTES)/unassignedDevs" ));
+                    .addRow(List.of("(VER DESARROLLADORES) /getProjectDevs","(VER DESAROLLADORES PENDIENTES)/unassignedDevs" ));
             telegramService.addRow("(IR A INICIO) /start");
 
             String message = """

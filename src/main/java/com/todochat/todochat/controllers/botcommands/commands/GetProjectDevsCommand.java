@@ -47,7 +47,13 @@ public class GetProjectDevsCommand implements BotCommand {
         // Obtenemos el manager
         Manager manager = auth.getManager();
 
-        // Obtenemos el proyecto del manager
+        // Obtenemos los proyectos del manager
+        List<Project> projects = manager.getProjects();
+
+        if (projects.isEmpty()) {
+            telegramService.sendMessage("No cuentas con un proyecto, gra uno con el comando /addProject-<Nombre de Proyecto>");
+            return;
+        }
         Project project = manager.getProjects().get(0);
 
         

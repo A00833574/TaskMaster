@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,6 +41,6 @@ public class Developer {
     @JsonIgnore
     private Project project;
 
-    @OneToMany(mappedBy = "developer")
+    @OneToMany(mappedBy = "developer",fetch = FetchType.EAGER)
     private List<Task> tareas;
 }

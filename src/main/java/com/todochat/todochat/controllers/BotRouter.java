@@ -106,7 +106,6 @@ public class BotRouter {
         commands.put("/projectTasks", listProjectTasksCommand);
         commands.put("/changeStatus", changeStatusCommand);
     
-        commands.put("/addTodo", addTodoCommand);
         commands.put("/addProject", addProjectCommand);
         commands.put("/myProject", myProjectCommand);
         commands.put("/addDeveloper", addDeveloperCommand);
