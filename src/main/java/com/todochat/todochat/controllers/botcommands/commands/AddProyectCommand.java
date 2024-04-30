@@ -48,7 +48,7 @@ public class AddProyectCommand implements BotCommand {
             return;
         }
         // Verificamos si la autenticacion es de desarrollador
-        if (auth.getDeveloper() == null) {
+        if (auth.getManager() == null) {
             telegramService.sendMessage("Necesitas autenticacion de desarrollador para agregar proyectos");
             return;
         }
