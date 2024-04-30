@@ -38,6 +38,10 @@ public class ProyectService {
         existingProyect.setManager(proyect.getManager());
         return proyectRepository.save(existingProyect);
     }
+    
+    public Proyect getProyectByManagerId(int managerId) {
+        return proyectRepository.findByManagerId(managerId);
+    }
 
     
 }
