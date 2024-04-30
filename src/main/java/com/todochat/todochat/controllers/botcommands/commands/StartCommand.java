@@ -1,5 +1,6 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,15 +68,24 @@ public class StartCommand implements BotCommand {
 
             Manager manager = auth.getManager();
 
-            telegramService.addRow(List.of("(CREAR PROYECTO) /createProject", "(VER MI PROYECTO) /myProject"));
+
+            List<String> firstRow = new ArrayList<>();
+            if(manager.getProyects().size() == 0){
+                firstRow.add("(CREAR PROYECTO) /createProject");
+            }else{
+                firstRow.add("(VER MI PROYECTO) /myProject");
+                firstRow.add("(VER TAREAS DE PROYECTO) /projectTasks");
+            }
+
+            telegramService.addRow(firstRow);
             telegramService
-                    .addRow(List.of("(VER DESARROLLADORES) /listDevelopers", "(VER TAREAS DE PROYECTO) /projectTasks"));
+                    .addRow(List.of("(VER DESARROLLADORES) /listDevelopers","(VER DESAROLLADORES PENDIENTES)/unassignedDevs" ));
             telegramService.addRow("(IR A INICIO) /start");
 
             String message = """
                     Bienvenido manager %s
                     Tus datos:
-                    Nombre completo $s
+                    Nombre completo %s
                     Correo: %s
                     Telefono: %s
                     Rol: %s

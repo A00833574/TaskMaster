@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,6 +33,6 @@ public class Manager {
     private String password;
     private String role;
     
-    @OneToMany(mappedBy = "manager")
+    @OneToMany(mappedBy = "manager",fetch = FetchType.EAGER)
     private List<Proyect> proyects;
 }
