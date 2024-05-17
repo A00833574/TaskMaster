@@ -51,6 +51,13 @@ jobs:
           pip3 install oci-cli
           oci --version
 
+      - name: Configure OCI CLI
+        run: |
+          mkdir -p ~/.oci
+          echo "${{ secrets.OCI_CONFIG }}" > ~/.oci/config
+          echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/oci_api_key.pem
+
       - name: Validate OCI CLI Installation
         run: |
           oci session validate
