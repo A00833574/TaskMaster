@@ -27,8 +27,10 @@ jobs:
           docker build -t todochat .
 
       - name: Log in to OCI Registry // This step logs in to OCI Registry
+        env:
+          OCI_AUTHTOKEN: ${{ secrets.OCI_AUTHTOKEN }}
         run: |
-          sudo docker login ${{secrets.OCI_REGION}}.ocir.io -u ${{secrets.OCI_NAMESPACE}}/${{ secrets.OCI_USERNAME }} -p ${{ secrets.OCI_AUTHTOKEN }}
+          echo $OCI_AUTHTOKEN| sudo docker login ${{secrets.OCI_REGION}}.ocir.io -u ${{secrets.OCI_NAMESPACE}}/${{ secrets.OCI_USERNAME }}
 
       - name: Tag Docker image // This step tags the Docker image
         run: |
