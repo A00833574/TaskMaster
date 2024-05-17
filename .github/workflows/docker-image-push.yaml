@@ -10,41 +10,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code // This step checks out the code in the repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx // This step sets up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Log in to Docker Hub // This step logs in to Docker Hub
+      - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Build Docker image // This step builds the Docker image
+      - name: Build Docker image
         run: |
           docker build -t todochat .
 
-      - name: Log in to OCI Registry // This step logs in to OCI Registry
+      - name: Log in to OCI Registry
         env:
           OCI_AUTHTOKEN: ${{ secrets.OCI_AUTHTOKEN }}
         run: |
-          docker login ${{secrets.OCI_REGION}}.ocir.io -u ${{secrets.OCI_NAMESPACE}}/${{ secrets.OCI_USERNAME }} -p $OCI_AUTHTOKEN
+          echo $OCI_AUTHTOKEN | docker login ${{ secrets.OCI_REGION }}.ocir.io -u ${{ secrets.OCI_NAMESPACE }}/${{ secrets.OCI_USERNAME }} --password-stdin
 
-      - name: Tag Docker image // This step tags the Docker image
+      - name: Tag Docker image
         run: |
-          docker tag todochat ${{secrets.OCI_REGION}}.ocir.io/${{secrets.OCI_NAMESPACE}}/${{secrets.OCI_REPO}}
+          docker tag todochat ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todogchat:latest
 
-      - name: Get Tagged Docker image // This step gets the tagged Docker image
+      - name: Get Tagged Docker image
         run: |
           docker images
 
-      - name: Push Docker image to OCI Registry // This step pushes the Docker image to OCI Registry
+      - name: Push Docker image to OCI Registry
         run: |
-          docker push ${{secrets.OCI_REGION}}.ocir.io/${{secrets.OCI_NAMESPACE}}/${{secrets.OCI_REPO}}:latest
+          docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todogchat:latest
 
-      - name: Set up kubectl // This step sets up kubectl
+      - name: Install OCI CLI
+        run: |
+          curl -L -O https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh
+          chmod +x install.sh
+          ./install.sh --accept-all-defaults
+
+      - name: Set up kubectl
         uses: azure/setup-kubectl@v1
         with:
           version: 'latest'
@@ -53,11 +59,14 @@ jobs:
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+          export KUBECONFIG=$HOME/.kube/config
+          kubectl config view
+          kubectl get nodes
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl delete -f taskmaster.yaml || true
-          kubectl create -f taskmaster.yaml
+          kubectl delete -f taskmaster.yaml --ignore-not-found=true
+          kubectl apply -f taskmaster.yaml
 
       - name: Check deployment status
         run: |
