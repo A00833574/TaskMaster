@@ -49,9 +49,14 @@ jobs:
         with:
           version: 'latest'
 
+      - name: Configure kubectl
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+
       - name: Deploy to Kubernetes
         run: |
-          kubectl delete -f taskmaster.yaml
+          kubectl delete -f taskmaster.yaml || true
           kubectl create -f taskmaster.yaml
 
       - name: Check deployment status
