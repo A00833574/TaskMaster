@@ -30,7 +30,7 @@ jobs:
         env:
           OCI_AUTHTOKEN: ${{ secrets.OCI_AUTHTOKEN }}
         run: |
-          echo $OCI_AUTHTOKEN| sudo docker login ${{secrets.OCI_REGION}}.ocir.io -u ${{secrets.OCI_NAMESPACE}}/${{ secrets.OCI_USERNAME }}
+          docker login ${{secrets.OCI_REGION}}.ocir.io -u ${{secrets.OCI_NAMESPACE}}/${{ secrets.OCI_USERNAME }} -p $OCI_AUTHTOKEN
 
       - name: Tag Docker image // This step tags the Docker image
         run: |
