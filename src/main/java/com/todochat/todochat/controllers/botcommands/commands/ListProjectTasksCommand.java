@@ -1,6 +1,5 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +9,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
-import com.todochat.todochat.models.Developer;
+import com.todochat.todochat.models.Manager;
+import com.todochat.todochat.models.Project;
 import com.todochat.todochat.models.Task;
-import com.todochat.todochat.models.enums.Status;
 import com.todochat.todochat.services.AuthService;
 import com.todochat.todochat.services.TaskService;
 import com.todochat.todochat.services.TelegramService;
@@ -23,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
  
 @Component
-public class ListTodoCommand implements BotCommand {
+public class ListProjectTasksCommand implements BotCommand {
     
     @Autowired
     private TaskService taskService;
@@ -49,39 +48,32 @@ public class ListTodoCommand implements BotCommand {
             return;
         }
         // Verificamos si la autenticacion es de desarrollador
-        if (auth.getDeveloper() == null) {
+        if (auth.getManager() == null) {
             telegramService.sendMessage("Necesitas autenticacion de desarrollador para agregar tareas");
             return;
         }
 
-        Developer developer = auth.getDeveloper();
+        Manager manager = auth.getManager();
+
+        // Obtenemos el proyecto del manager
+        Project project = manager.getProjects().get(0);
 
         try {
 
-            List<Task> tasksList = taskService.getAllTasksByDeveloper(developer.getId());
+            List<Task> tasksList = taskService.getAllTasksByProject(project.getId());
             String tasksMsg = "";
             
             if (tasksList.isEmpty()){
-                telegramService.sendMessage("No cuentas con ninguna tarea asignada. Para agregar una tarea, utiliza el comando '/addTodo-nombre de tarea-descripcion de tarea' respetando los guiones.");
+                telegramService.sendMessage("El proyecto no cuenta con ninguna tarea.");
             }
             else {
 
                 // Se agregan las tareas enlistadas al teclado
                 for (Task task : tasksList) {
                     String details = "(DETALLES DE " + task.getName() + ") /viewTodo-" + task.getId();
-                    String progressStatus = "(COLOCAR EN PROGRESO " + task.getName() + ") /changeStatus-" + task.getId()+"-progress";
-                    String completeStatus = "(COLOCAR COMPLETADO " + task.getName() + ") /changeStatus-" + task.getId()+"-completed";
+                  
 
-                    List<String> row = new ArrayList<>();
-                    row.add(details);
-                    if(task.getStatus() == Status.PENDING){
-                        row.add(progressStatus);
-                    }
-                    if(task.getStatus() == Status.IN_PROGRESS){
-                        row.add(completeStatus);
-                    }
-
-                    telegramService.addRow(row);
+                    telegramService.addRow(details);
                 }
 
                 telegramService.addRow("(IR A INICIO)/start");
@@ -90,7 +82,7 @@ public class ListTodoCommand implements BotCommand {
                 for (Task task : tasksList) {
                     tasksMsg = tasksMsg +task.getId() + "-" + task.getName() + " --- " + task.getStatus() + "\n";
                 }
-                telegramService.sendMessage("Tareas asignadas a " + developer.getName() + ":\n\n" + tasksMsg + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
+                telegramService.sendMessage("Tareas asignadas del proyecto " + project.getName() + ":\n\n" + tasksMsg + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
 
             }
            

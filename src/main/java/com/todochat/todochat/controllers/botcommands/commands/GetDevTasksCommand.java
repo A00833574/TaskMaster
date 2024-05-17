@@ -17,7 +17,7 @@ import com.todochat.todochat.services.TelegramService;
 
 @Component
 public class GetDevTasksCommand implements BotCommand {
-    
+
     @Autowired
     private AuthService authService;
 
@@ -38,14 +38,14 @@ public class GetDevTasksCommand implements BotCommand {
         }
 
         // Verificamos si la autenticacion es de manager
-        if (authService.authenticate(update).getDeveloper() == null) {
-            telegramService.sendMessage("Necesitas autenticacion de desarrollador para ver tus tareas");
+        if (auth.getManager() == null) {
+            telegramService.sendMessage("Necesitas autenticacion de manager para ver las tareas de un desarrollador");
             return;
         }
 
         // Verificamos si el comando tiene argumentos
         if (arguments.length == 0) {
-            telegramService.sendMessage("/getDevTasks [id del desarrollador]");
+            telegramService.sendMessage("/getDevTasks-[id del desarrollador]");
             return;
         }
 
@@ -61,26 +61,28 @@ public class GetDevTasksCommand implements BotCommand {
         }
 
         // Obtenemos las tareas del desarrollador
-        List<Task> tasks = developerService.getTasksByDeveloperId(developerId);
+        List<Task> tasks = developer.getTareas();
 
         if (tasks.isEmpty()) {
-            telegramService.sendMessage("No tienes tareas asignadas");
+            telegramService.sendMessage("Este desarrollador no tiene tareas asignadas");
             return;
         }
 
-        // Mostramos las tareas
-        StringBuilder message = new StringBuilder("Tareas asignadas:\n");
+        // Se agregan las tareas enlistadas al teclado
         for (Task task : tasks) {
-            message.append(task.toString()).append("\n");
+            String details = "(DETALLES DE " + task.getName() + ") /viewTodo-" + task.getId();
+            
+
+            telegramService.addRow(details);
         }
 
-        List<String> commands = List.of(
-            "(Agregar tarea)/addTask-titulo-descripcion-prioridad",
-            "(Eliminar tarea)/deleteTask-id"
-        );
-
-        telegramService.addRow(commands);
-
-        telegramService.sendMessage(message.toString());
+        telegramService.addRow("(IR A INICIO)/start");
+        String tasksMsg = "";
+        // Se construye el mensake de texto que regresa el chatbot
+        for (Task task : tasks) {
+            tasksMsg = tasksMsg + task.getId() + "-" + task.getName() + " --- " + task.getStatus() + "\n";
+        }
+        telegramService.sendMessage("Tareas asignadas a " + developer.getName() + ":\n\n" + tasksMsg
+                + "\nEscribe '/viewTodo-id de tarea' para desplegar los detalles de una tarea.");
     }
 }

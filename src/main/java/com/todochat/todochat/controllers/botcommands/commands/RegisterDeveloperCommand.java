@@ -1,6 +1,5 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class RegisterDeveloperCommand implements BotCommand {
         authService.createAuthToken(authToken);
         
         // Opciones a sugerir
-        telegramService.addRow(List.of("(VER MIS TAREAS)/myTasks","(AGREGAR TAREA)/addTask"));
+        telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo","(AGREGAR TAREA)/addTask"));
         telegramService.addRow("(IR A INICIO)/start");
         telegramService.sendMessage("Haz sido registrado correctamente y te encuentras autenticado");
 

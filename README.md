@@ -18,7 +18,7 @@ A Telegram Chatbot developed for Oracle developers by ITESM Students
 
 [SRS File](/documentacion/SRS.pdf)
 
-[Project Plan](/documentacion/Plan_de_Proyecto.pdf)
+[Project Plan](/documentacion/Plan_de_Projecto.pdf)
 
 ## Dependencias del proyecto
 

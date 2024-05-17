@@ -1,5 +1,6 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,8 @@ public class StartCommand implements BotCommand {
 
             Developer developer = auth.getDeveloper();
 
-            telegramService.addRow(List.of("(VER MIS TAREAS)/myTasks", "(AGREGAR TAREA)/addTask"));
-            telegramService.addRow(List.of("(MODIFICAR MIS DATOS)/profile", "(CERRAR SESION)/logout"));
+            telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo", "(AGREGAR TAREA)/addTask"));
+            telegramService.addRow("(CERRAR SESION)/logout");
             String message = """
                     Bienvenido desarrollador %s
                     Tus datos:
@@ -54,7 +55,7 @@ public class StartCommand implements BotCommand {
                     Rol: %s
 
                     ¿Que deseas hacer?
-                    Ver tus tareas: /myTasks
+                    Ver tus tareas: /listTodo
                     Agregar una tarea: /addTask-nombreTarea-descripcionTarea
                     """.formatted(developer.getName(), developer.getName() + " " + developer.getLastname(),
                     developer.getMail(), developer.getPhone(), developer.getRole());
@@ -67,21 +68,30 @@ public class StartCommand implements BotCommand {
 
             Manager manager = auth.getManager();
 
-            telegramService.addRow(List.of("(CREAR PROYECTO) /createProject", "(VER MI PROYECTO) /myProject"));
+
+            List<String> firstRow = new ArrayList<>();
+            if(manager.getProjects().size() == 0){
+                firstRow.add("(CREAR PROYECTO) /addProject");
+            }else{
+                firstRow.add("(VER MI PROYECTO) /myProject");
+                firstRow.add("(VER TAREAS DE PROYECTO) /projectTasks");
+            }
+
+            telegramService.addRow(firstRow);
             telegramService
-                    .addRow(List.of("(VER DESARROLLADORES) /listDevelopers", "(VER TAREAS DE PROYECTO) /projectTasks"));
-            telegramService.addRow("(IR A INICIO) /start");
+                    .addRow(List.of("(VER DESARROLLADORES) /getProjectDevs","(VER DESAROLLADORES PENDIENTES)/unassignedDevs" ));
+            telegramService.addRow("(CERRAR SESION) /logout");
 
             String message = """
                     Bienvenido manager %s
                     Tus datos:
-                    Nombre completo $s
+                    Nombre completo %s
                     Correo: %s
                     Telefono: %s
                     Rol: %s
 
                     ¿Que deseas hacer?
-                    Ver tus tareas: /myTasks
+                    Ver tus tareas: /listTodo
                     Agregar una tarea: /addTask-nombreTarea-descripcionTarea
                     """.formatted(manager.getName(), manager.getName() + " " + manager.getLastname(), manager.getMail(),
                     manager.getPhone(), manager.getRole());

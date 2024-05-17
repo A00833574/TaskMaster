@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<ruleset name="default xml lint rules">
+  <rule ref="https://raw.githubusercontent.com/selesse/xml-lint-rules/master/rulesets/basic.xml"/>
+</ruleset>

@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,10 +37,10 @@ public class Developer {
     private String role;
     
     @ManyToOne
-    @JoinColumn(name = "proyectId")
+    @JoinColumn(name = "projectId")
     @JsonIgnore
-    private Proyect proyect;
+    private Project project;
 
-    @OneToMany(mappedBy = "developer")
+    @OneToMany(mappedBy = "developer",fetch = FetchType.EAGER)
     private List<Task> tareas;
 }

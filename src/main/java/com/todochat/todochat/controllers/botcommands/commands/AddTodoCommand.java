@@ -1,6 +1,6 @@
 package com.todochat.todochat.controllers.botcommands.commands;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +10,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import com.todochat.todochat.controllers.TaskBotController;
 import com.todochat.todochat.controllers.botcommands.BotCommand;
 import com.todochat.todochat.models.AuthToken;
+import com.todochat.todochat.models.Developer;
+import com.todochat.todochat.models.Project;
 import com.todochat.todochat.models.Task;
 import com.todochat.todochat.models.enums.Status;
 import com.todochat.todochat.services.AuthService;
@@ -56,6 +58,10 @@ public class AddTodoCommand implements BotCommand {
             return;
         }
 
+        // Obtenemos el proyecto del desarollador
+        Developer developer = auth.getDeveloper();
+        Project project = developer.getProject();
+
         try {
             Task newItem = new Task();
             Date currentDate = new Date();
@@ -70,6 +76,7 @@ public class AddTodoCommand implements BotCommand {
             newItem.setFecha_inicio(currentDate);
             newItem.setStatus(Status.PENDING);
             newItem.setDeveloper(auth.getDeveloper());
+            newItem.setProject(project);
             taskService.createTask(newItem);
 
             telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo", "(AGREGAR TAREA)/addTodo"));

@@ -6,25 +6,25 @@ import org.springframework.stereotype.Service;
 
 import com.todochat.todochat.models.Manager;
 import com.todochat.todochat.models.Developer;
-import com.todochat.todochat.models.Proyect;
+import com.todochat.todochat.models.Project;
 import com.todochat.todochat.models.Task;
 import com.todochat.todochat.repositories.ManagerRepository;
-import com.todochat.todochat.repositories.ProyectRepository;
+import com.todochat.todochat.repositories.ProjectRepository;
 import com.todochat.todochat.repositories.DeveloperRepository;
 
 @Service
 public class ManagerService {
 
     private final ManagerRepository managerRepository;
-    private final ProyectRepository proyectRepository;
+    private final ProjectRepository projectRepository;
     private final DeveloperRepository developerRepository;
     private final PasswordEncoder passwordEncoder;
 
     
-    public ManagerService(ManagerRepository ManagerRepository, ProyectRepository proyectRepository, DeveloperRepository developerRepository , PasswordEncoder passwordEncoder) {
+    public ManagerService(ManagerRepository ManagerRepository, ProjectRepository projectRepository, DeveloperRepository developerRepository , PasswordEncoder passwordEncoder) {
         this.managerRepository = ManagerRepository;
         this.passwordEncoder = passwordEncoder;
-        this.proyectRepository = proyectRepository;
+        this.projectRepository = projectRepository;
         this.developerRepository = developerRepository;
     }
 
@@ -60,20 +60,35 @@ public class ManagerService {
         return managerRepository.save(existingManager);
     }
 
-    public List<Task> getTasksByProyectId(Integer id) {
-        Proyect proyect = proyectRepository.findById(id).orElse(null);
-        return proyect.getTasks();
+    public List<Task> getTasksByProjectId(Integer id) {
+        Project project = projectRepository.findById(id).orElse(null);
+        return project.getTasks();
     }
 
-    public String assignProyect(int idProyect, int idDeveloper) {
-        Proyect existingProyect = proyectRepository.findById(idProyect).orElse(null);
+    public String assignProject(int idProject, int idDeveloper) {
+        Project existingProject = projectRepository.findById(idProject).orElse(null);
         Developer existingDeveloper = developerRepository.findById(idDeveloper).orElse(null);
-        existingDeveloper.setProyect(existingProyect);
+        existingDeveloper.setProject(existingProject);
         developerRepository.save(existingDeveloper);
-        return "Developer with id " + idDeveloper + " has been assigned to Proyect with id " + idProyect;
+        return "Developer with id " + idDeveloper + " has been assigned to Project with id " + idProject;
     }
 
-    public List<Developer> getDevelopersByProyectId(Integer id) {
-        return developerRepository.findAllByproyectId(id);
+    public List<Developer> getDevelopersByProjectId(Integer id) {
+        return developerRepository.findAllByprojectId(id);
     }
+    public String removeDeveloperFromProject(int projectId, int developerId) {
+        Developer developer = developerRepository.findById(developerId).orElse(null);
+        if (developer == null) {
+            return "No se encontro developer.";
+        }
+        if (developer.getProject() == null || developer.getProject().getId() != projectId) {
+            return "El developer no esta asignado a este proyecto";
+        }
+        String developerName = developer.getName() + " " + developer.getLastname();
+        String projectName = developer.getProject().getName();
+        developer.setProject(null);
+        developerRepository.save(developer);
+        return String.format("El desarrollador %s ha sido eliminado del proyecto %s.", developerName, projectName);
+    }
+
 }

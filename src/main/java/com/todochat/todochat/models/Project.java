@@ -4,6 +4,7 @@ package com.todochat.todochat.models;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,19 +24,19 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Entity
-public class Proyect {
+public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     
-    @OneToMany(mappedBy = "proyect")
+    @OneToMany(mappedBy = "project",fetch = FetchType.EAGER)
     private List<Developer> developers;
 
-    @OneToMany(mappedBy = "proyect")
+    @OneToMany(mappedBy = "project",fetch = FetchType.EAGER)
     private List<Task> tasks;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id")
+    @JoinColumn(name = "managerId")
     private Manager manager;
 }

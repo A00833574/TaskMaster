@@ -15,13 +15,19 @@ import com.todochat.todochat.controllers.botcommands.commands.LoginManagerComman
 import com.todochat.todochat.controllers.botcommands.commands.RegisterManagerCommand;
 import com.todochat.todochat.controllers.botcommands.commands.StartCommand;
 import com.todochat.todochat.controllers.botcommands.commands.GetDevTasksCommand;
-import com.todochat.todochat.controllers.botcommands.commands.GetProyectDevsCommand;
+import com.todochat.todochat.controllers.botcommands.commands.GetProjectDevsCommand;
+import com.todochat.todochat.controllers.botcommands.commands.ListProjectTasksCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnknownCommand;
 import com.todochat.todochat.controllers.botcommands.commands.DeleteTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.LogoutCommand;
+import com.todochat.todochat.controllers.botcommands.commands.MyProjectCommand;
+import com.todochat.todochat.controllers.botcommands.commands.RegisterDeveloperCommand;
 import com.todochat.todochat.controllers.botcommands.commands.UnassignedDevelopersCommand;
 import com.todochat.todochat.controllers.botcommands.commands.ViewTodoCommand;
 import com.todochat.todochat.controllers.botcommands.commands.changeStatusCommand;
+import com.todochat.todochat.controllers.botcommands.commands.AddProjectCommand;
+import com.todochat.todochat.controllers.botcommands.commands.AddDeveloperCommand;
+import com.todochat.todochat.controllers.botcommands.commands.RemoveDeveloperCommand;
 
 import jakarta.annotation.PostConstruct;
 
@@ -48,11 +54,16 @@ public class BotRouter {
     public DeleteTodoCommand deleteTodoCommand;
     @Autowired
     public UnassignedDevelopersCommand unassignedDevelopersCommand;
-    public GetDevTasksCommand getDevTasksCommand;
-
     @Autowired
-    public GetProyectDevsCommand getProyectDevsCommand;
-
+    public GetDevTasksCommand getDevTasksCommand;
+    @Autowired
+    public GetProjectDevsCommand getProjectDevsCommand;
+    @Autowired
+    public AddProjectCommand addProjectCommand;
+    @Autowired
+    public AddDeveloperCommand addDeveloperCommand;
+    @Autowired
+    public RemoveDeveloperCommand removeDeveloperCommand;
     @Autowired
     public LoginDeveloperCommand loginDeveloperCommand;
     @Autowired
@@ -60,32 +71,46 @@ public class BotRouter {
     @Autowired
     public RegisterManagerCommand registerManagerCommand;
     @Autowired
-    public RegisterManagerCommand registerDeveloperCommand;
+    public RegisterDeveloperCommand registerDeveloperCommand;
     @Autowired
     public LogoutCommand LogoutCommand;
+    @Autowired
+    public MyProjectCommand myProjectCommand;
+    @Autowired
+    public ListProjectTasksCommand listProjectTasksCommand;
 
     @PostConstruct
     public void initCommands() {
-        commands.put("/start", startCommand);
-        commands.put("/login", loginDeveloperCommand);
-        commands.put("/getDevTasks", getDevTasksCommand);
-        commands.put("/getProjectDevs", getProyectDevsCommand);
+        // Navegacion
+        commands.put("/start", startCommand); // Testeado manager y enviado
 
-        commands.put("/loginDev", loginDeveloperCommand);
-        commands.put("/loginManager", loginManagerCommand);
-        commands.put("/logout", LogoutCommand);
+        // Auth
+        commands.put("/loginDev", loginDeveloperCommand); // Testeado y mandado
+        commands.put("/loginManager", loginManagerCommand); // Testeado y mandado
+        commands.put("/logout", LogoutCommand); // Testeado y mandado
 
-        commands.put("/registerManager",registerManagerCommand);
-        commands.put("/registerDeveloper",registerDeveloperCommand);
+        // Register
+        commands.put("/registerManager",registerManagerCommand); // Testeado y mandado
+        commands.put("/registerDeveloper",registerDeveloperCommand); // Testeado y mandado
+
+        // Developers
+        commands.put("/deleteTodo", deleteTodoCommand); // Testeado y mandado
+        commands.put("/addTask", addTodoCommand); // Testeado y mandado
+        commands.put("/listTodo", listTodoCommand); // Testeado y mandado
+        commands.put("/changeStatus", changeStatusCommand); // Testeado y mandado
         
-        commands.put("/addTodo", addTodoCommand);
-        commands.put("/deleteTodo", deleteTodoCommand);
-        commands.put("/addTask", addTodoCommand);
-
-        commands.put("/unassignedDevs", unassignedDevelopersCommand);
-        commands.put("/listTodo", listTodoCommand);
-        commands.put("/viewTodo", viewTodoCommand);
-        commands.put("/changeStatus", changeStatusCommand);
+        // Managers
+        commands.put("/getDevTasks", getDevTasksCommand); // Testeado y mandado
+        commands.put("/getProjectDevs", getProjectDevsCommand); // Testeado y mandado
+        commands.put("/unassignedDevs", unassignedDevelopersCommand); // Testeado y mandado
+        commands.put("/projectTasks", listProjectTasksCommand); // Testeado y mandado
+        commands.put("/addProject", addProjectCommand); 
+        commands.put("/myProject", myProjectCommand); // Testeado y mandado
+        commands.put("/addDeveloper", addDeveloperCommand); // Testeado y mandado
+        commands.put("/removeDeveloper", removeDeveloperCommand); // Testeado y mandado
+        
+        // Developers-Managers
+        commands.put("/viewTodo", viewTodoCommand); // Testeado y mandado
     }
 
     public void route(Update update, TaskBotController botController) {
