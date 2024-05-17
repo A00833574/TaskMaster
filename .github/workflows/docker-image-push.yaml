@@ -49,6 +49,11 @@ jobs:
           sudo apt update
           sudo apt install -y python3-pip
           pip3 install oci-cli
+          oci --version
+
+      - name: Validate OCI CLI Installation
+        run: |
+          oci session validate
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
