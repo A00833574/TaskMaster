@@ -46,9 +46,9 @@ jobs:
 
       - name: Install OCI CLI
         run: |
-          curl -L -O https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh
-          chmod +x install.sh
-          ./install.sh --accept-all-defaults
+          sudo apt update
+          sudo apt install -y python3-pip
+          pip3 install oci-cli
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
@@ -56,9 +56,11 @@ jobs:
           version: 'latest'
 
       - name: Configure kubectl
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
         run: |
           mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+          echo "${KUBECONFIG}" > $HOME/.kube/config
           export KUBECONFIG=$HOME/.kube/config
           kubectl config view
           kubectl get nodes
