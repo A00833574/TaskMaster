@@ -90,13 +90,14 @@ jobs:
           echo "::set-output name=ip::$IP"
 
       - name: Send email notification
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@v2
         with:
-          server_address: smtp.gmail.com
+          server_address: smtp.tec.mx
           server_port: 587
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "New Kubernetes LoadBalancer IP"
-          body: "The new LoadBalancer IP is: ${{ steps.get_ip.outputs.ip }}"
-          to: ${{ secrets.NOTIFICATION_EMAIL }}
-          from: ${{ secrets.EMAIL_USERNAME }}
+          subject: 'Kubernetes Deployment Status'
+          body: 'Deployment successful. LoadBalancer IP: ${{ steps.get_ip.outputs.ip }}'
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_FROM }}
+          content_type: 'text/plain'
