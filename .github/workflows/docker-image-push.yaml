@@ -35,6 +35,10 @@ jobs:
           echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
           chmod 600 ~/.oci/config ~/.oci/oci_api_key.pem
 
+      - name: Validate OCI CLI
+        run: |
+          oci iam region list
+
       - name: Build Docker image
         run: |
           docker build -t todochat .
@@ -55,28 +59,7 @@ jobs:
 
       - name: Push Docker image to OCI Registry
         run: |
-          docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
-      # - name: Install OCI CLI
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install -y python3-pip
-      #     pip3 install oci-cli
-      #     oci --version
-
-      # - name: Configure OCI CLI
-      #   env:
-      #     OCI_CLI_SUPPRESS_FILE_PERMISSIONS_WARNING: "True"
-      #     OCI_CLI_SUPPRESS_SECURITY_TOKEN_FILE_WARNING: "True"
-      #   run: |
-      #     mkdir -p ~/.oci
-      #     echo "[DEFAULT]" > ~/.oci/config
-      #     echo "user=${{ secrets.OCI_USER_OCID }}" >> ~/.oci/config
-      #     echo "fingerprint=${{ secrets.OCI_KEY_FINGERPRINT }}" >> ~/.oci/config
-      #     echo "key_file=~/.oci/oci_api_key.pem" >> ~/.oci/config
-      #     echo "tenancy=${{ secrets.OCI_TENANCY_OCID }}" >> ~/.oci/config
-      #     echo "region=${{ secrets.OCI_REGION }}" >> ~/.oci/config
-      #     echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
-      #     chmod 600 ~/.oci/config ~/.oci/oci_api_key.pem
+          docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest.pem
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
@@ -101,5 +84,7 @@ jobs:
       - name: Check deployment status
         run: |
           kubectl get pods
-          kubectl get services
+        # Check until all pods are running
+          kubectl wait --for=condition=Ready --timeout=300s pod -l app=taskmaster
+          kubeclt get services
           kubectl get deployments
