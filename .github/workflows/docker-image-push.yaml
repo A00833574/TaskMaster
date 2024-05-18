@@ -92,7 +92,7 @@ jobs:
       - name: Send email notification
         uses: dawidd6/action-send-mail@v2
         with:
-          server_address: smtp.itesm.mx
+          server_address: smtp.office365.com
           server_port: 587
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
