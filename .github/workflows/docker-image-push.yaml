@@ -53,9 +53,9 @@ jobs:
 
       - name: Configure OCI CLI
         run: |
-          mkdir -p ~/.oci
+          mkdir -p ~/.oci && echo "${{ secrets.OCI_CONFIG }}" > ~/.oci/config
           echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
-          oci setup config --region ${{ secrets.OCI_REGION }} --tenancy-id ${{ secrets.OCI_TENANCY_OCID }} --user-id ${{ secrets.OCI_USER_OCID }} --fingerprint ${{ secrets.OCI_KEY_FINGERPRINT }} --key-file ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/config ~/.oci/oci_api_key.pem
 
       # - name: Install OCI CLI
       #   run: |
