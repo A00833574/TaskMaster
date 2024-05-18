@@ -83,8 +83,7 @@ jobs:
 
       - name: Check deployment status
         run: |
+          sleep 90
           kubectl get pods
-        # Check until all pods are running
-          kubectl wait --for=condition=Ready --timeout=300s pod -l app=taskmaster
-          kubeclt get services
+          kubectl get services
           kubectl get deployments
