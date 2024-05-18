@@ -87,17 +87,22 @@ jobs:
         id: get_ip
         run: |
           IP=$(kubectl get services | grep LoadBalancer | awk '{print $4}')
+          echo "LoadBalancer IP: $IP"
           echo "::set-output name=ip::$IP"
 
-      - name: Send email notification
-        uses: dawidd6/action-send-mail@v2
+      - name: Update repository description with LoadBalancer IP
+        uses: actions/github-script@v3
         with:
-          server_address: smtp.office365.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: 'Kubernetes Deployment Status'
-          body: 'Deployment successful. LoadBalancer IP: ${{ steps.get_ip.outputs.ip }}'
-          to: 'A00833574@tec.mx; A00833324@tec.mx; A01571170@tec.mx; A01177877@tec.mx; A00833471@tec.mx'
-          from: KubernetesDeploy@Taskmaster.com
-          content_type: 'text/plain'
+          script: |
+            const { github, context } = require('@actions/github');
+            const repo = context.repo.repo;
+            const owner = context.repo.owner;
+            const newDescription = `LoadBalancer IP address: ${process.env.LOAD_BALANCER_IP}`;
+            github.repos.update({
+              owner: owner,
+              repo: repo,
+              description: newDescription
+            });
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LOAD_BALANCER_IP: ${{ steps.get_ip.outputs.ip }}
