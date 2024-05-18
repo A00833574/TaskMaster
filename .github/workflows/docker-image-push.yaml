@@ -98,6 +98,6 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: 'Kubernetes Deployment Status'
           body: 'Deployment successful. LoadBalancer IP: ${{ steps.get_ip.outputs.ip }}'
-          to: ${{ secrets.EMAIL_TO }}
+          to: 'A00833574@tec.mx; A00833324@tec.mx; A01571170@tec.mx; A01177877@tec.mx; A00833471@tec.mx'
           from: KubernetesDeploy@Taskmaster.com
           content_type: 'text/plain'
