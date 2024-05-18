@@ -34,7 +34,7 @@ jobs:
 
       - name: Tag Docker image
         run: |
-          docker tag todochat ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
+          docker tag todochat ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todogchat:latest
 
       - name: Get Tagged Docker image
         run: |
@@ -42,7 +42,7 @@ jobs:
 
       - name: Push Docker image to OCI Registry
         run: |
-          docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
+          docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todogchat:latest
 
       - name: Install OCI CLI
         run: |
@@ -52,6 +52,8 @@ jobs:
           oci --version
 
       - name: Configure OCI CLI
+        env:
+          OCI_CLI_SUPPRESS_FILE_PERMISSIONS_WARNING: "True"
         run: |
           mkdir -p ~/.oci
           echo "[DEFAULT]" > ~/.oci/config
@@ -61,9 +63,11 @@ jobs:
           echo "tenancy=${{ secrets.OCI_TENANCY_OCID }}" >> ~/.oci/config
           echo "region=${{ secrets.OCI_REGION }}" >> ~/.oci/config
           echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
-          chmod 600 ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/config ~/.oci/oci_api_key.pem
 
       - name: Validate OCI CLI Installation
+        env:
+          OCI_CLI_SUPPRESS_FILE_PERMISSIONS_WARNING: "True"
         run: |
           oci session validate
 
