@@ -59,7 +59,7 @@ jobs:
 
       - name: Push Docker image to OCI Registry
         run: |
-          docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest.pem
+          docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
