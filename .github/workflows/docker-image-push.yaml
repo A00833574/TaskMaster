@@ -94,13 +94,10 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
-            const { github, context } = require('@actions/github');
-            const repo = context.repo.repo;
-            const owner = context.repo.owner;
             const newDescription = `LoadBalancer IP address: ${process.env.LOAD_BALANCER_IP}`;
             github.repos.update({
-              owner: owner,
-              repo: repo,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               description: newDescription
             });
         env:
