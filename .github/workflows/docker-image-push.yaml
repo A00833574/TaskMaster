@@ -99,5 +99,5 @@ jobs:
           subject: 'Kubernetes Deployment Status'
           body: 'Deployment successful. LoadBalancer IP: ${{ steps.get_ip.outputs.ip }}'
           to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_FROM }}
+          from: KubernetesDeploy@Taskmaster.com
           content_type: 'text/plain'
