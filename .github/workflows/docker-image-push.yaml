@@ -52,6 +52,9 @@ jobs:
           oci --version
 
       - name: Configure OCI CLI
+        env:
+          OCI_CLI_SUPPRESS_FILE_PERMISSIONS_WARNING: "True"
+          OCI_CLI_SUPPRESS_SECURITY_TOKEN_FILE_WARNING: "True"
         run: |
           mkdir -p ~/.oci
           echo "[DEFAULT]" > ~/.oci/config
