@@ -53,10 +53,6 @@ jobs:
         run: |
           docker tag todochat ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
 
-      - name: Get Tagged Docker image
-        run: |
-          docker images
-
       - name: Push Docker image to OCI Registry
         run: |
           docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
@@ -79,11 +75,28 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           kubectl delete -f taskmaster.yaml --ignore-not-found=true
-          kubectl apply -f taskmaster.yaml
+          kubectl create -f taskmaster.yaml
 
       - name: Check deployment status
         run: |
-          sleep 90
+          sleep 40
           kubectl get pods
           kubectl get services
-          kubectl get deployments
+
+      - name: Get LoadBalancer IP
+        id: get_ip
+        run: |
+          IP=$(kubectl get services | grep LoadBalancer | awk '{print $4}')
+          echo "::set-output name=ip::$IP"
+
+      - name: Send email notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "New Kubernetes LoadBalancer IP"
+          body: "The new LoadBalancer IP is: ${{ steps.get_ip.outputs.ip }}"
+          to: ${{ secrets.NOTIFICATION_EMAIL }}
+          from: ${{ secrets.EMAIL_USERNAME }}
