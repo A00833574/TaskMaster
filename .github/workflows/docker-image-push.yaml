@@ -90,16 +90,16 @@ jobs:
           echo "LoadBalancer IP: $IP"
           echo "::set-output name=ip::$IP"
 
-      - name: Update repository description with LoadBalancer IP
+      - name: Create issue with LoadBalancer IP
         uses: actions/github-script@v3
         with:
           script: |
-            const { context } = require('@actions/github');
-            const newDescription = `LoadBalancer IP address: ${process.env.LOAD_BALANCER_IP}`;
-            return github.repos.update({
+            const { github, context } = require('@actions/github');
+            const newIssue = await github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              description: newDescription
+              title: 'New LoadBalancer IP Address',
+              body: `The new LoadBalancer IP address is: ${process.env.LOAD_BALANCER_IP}`
             });
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_PAT }}
