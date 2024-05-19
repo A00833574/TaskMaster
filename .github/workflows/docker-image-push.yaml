@@ -7,6 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')" # Skip if the commit message contains '[skip ci]'
     runs-on: ubuntu-latest
 
     steps:
@@ -90,17 +91,16 @@ jobs:
           echo "LoadBalancer IP: $IP"
           echo "::set-output name=ip::$IP"
 
-      - name: Create issue with LoadBalancer IP
-        uses: actions/github-script@v3
-        with:
-          script: |
-            const { github, context } = require('@actions/github');
-            const newIssue = await github.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: 'New LoadBalancer IP Address',
-              body: `The new LoadBalancer IP address is: ${process.env.LOAD_BALANCER_IP}`
-            });
+      - name: Write LoadBalancer IP to file
+        run: |
+          echo "The new LoadBalancer IP address is: ${{ steps.get_ip.outputs.ip }}" > loadbalancer-ip.txt
+
+      - name: Commit and push LoadBalancer IP file
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_PAT }}
-          LOAD_BALANCER_IP: ${{ steps.get_ip.outputs.ip }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add loadbalancer-ip.txt
+          git commit -m "Update LoadBalancer IP address [skip ci]"
+          git push origin main
