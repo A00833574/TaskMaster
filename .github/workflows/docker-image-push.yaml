@@ -101,5 +101,5 @@ jobs:
               description: newDescription
             });
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_PAT: ${{ secrets.REPO_PAT }}
           LOAD_BALANCER_IP: ${{ steps.get_ip.outputs.ip }}
