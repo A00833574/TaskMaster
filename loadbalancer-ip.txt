@@ -1,1 +1,1 @@
-The new LoadBalancer IP address is: 159.54.131.190
+The new LoadBalancer IP address is: 140.84.189.34
