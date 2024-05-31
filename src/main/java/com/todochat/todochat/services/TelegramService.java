@@ -22,8 +22,7 @@ public class TelegramService {
 
     private static final Logger logger = LoggerFactory.getLogger(TaskBotController.class);
 
-    // Constructor que inicializa la clase con un objeto Update y el controlador del
-    // bot
+    // Constructor que inicializa la clase con un objeto Update y el controlador del bot
     public TelegramService(Update update, TaskBotController botController) {
         this.update = update;
         this.botController = botController;
@@ -33,7 +32,11 @@ public class TelegramService {
         this.keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
         this.keyboardMarkup.setKeyboard(keyboard);
+    }
 
+    // Getter for keyboardMarkup
+    public ReplyKeyboardMarkup getKeyboardMarkup() {
+        return keyboardMarkup;
     }
 
     // Metodo para agregar a una tabla
@@ -61,17 +64,14 @@ public class TelegramService {
 
     // Método para enviar un mensaje
     public void sendMessage(String messageText) {
-
         try {
             this.messageToTelegram.setText(messageText);
             if (this.keyboardMarkup.getKeyboard() != null) {
-
                 this.messageToTelegram.setReplyMarkup(this.keyboardMarkup);
             }
             botController.execute(messageToTelegram);
         } catch (Exception e) {
             logger.error("Error al mandar mensaje " + e.getMessage(), e);
         }
-
     }
 }
