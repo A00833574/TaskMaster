@@ -99,6 +99,7 @@ jobs:
       - name: Write LoadBalancer IP to file
         run: |
           echo "The new LoadBalancer IP address is: ${{ steps.get_ip.outputs.ip }}" > loadbalancer-ip.txt
+          cat loadbalancer-ip.txt
 
       - name: Commit and push LoadBalancer IP file
         env:
@@ -107,6 +108,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add loadbalancer-ip.txt
-          git commit -m "Update LoadBalancer IP address [skip ci]"
+          git commit -m "Update LoadBalancer IP address [skip ci]" || echo "No changes to commit"
           git pull --rebase origin main
           git push origin main
