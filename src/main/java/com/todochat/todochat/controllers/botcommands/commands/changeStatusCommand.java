@@ -139,7 +139,7 @@ public class changeStatusCommand implements BotCommand {
 
                             Acciones sugeridas:
                             Ver tus tareas: /viewTodo
-                            Agregar una tarea: /addTodo-nombreTarea-descripcionTarea
+                            Agregar una tarea: /addTask-nombreTarea-descripcionTarea
                             Cambiar estatus de esta tarea: /changeStatus-%s-estatusNuevo    (estatusNuevo: pending | progress | completed)
                             """.formatted(msgRespuesta, task.getId(), task.getName(), task.getDescription(),
                             task.getStatus(), formatData.format(task.getFecha_inicio()), endDate, task.getId());

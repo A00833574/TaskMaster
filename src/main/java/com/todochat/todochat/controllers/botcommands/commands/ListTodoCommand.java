@@ -62,7 +62,7 @@ public class ListTodoCommand implements BotCommand {
             String tasksMsg = "";
             
             if (tasksList.isEmpty()){
-                telegramService.sendMessage("No cuentas con ninguna tarea asignada. Para agregar una tarea, utiliza el comando '/addTodo-nombre de tarea-descripcion de tarea' respetando los guiones.");
+                telegramService.sendMessage("No cuentas con ninguna tarea asignada. Para agregar una tarea, utiliza el comando '/addTask-nombre de tarea-descripcion de tarea' respetando los guiones.");
             }
             else {
 

@@ -67,7 +67,7 @@ public class AddProjectCommand implements BotCommand {
 
             // TODO: Agregar opciones de teclado
 
-            telegramService.sendMessage("Projecto agregado correctamente, puedes agregar tareas con /addTodo, agregar developers con /addDeveloper y ver el estado del proyecto con /showProject");
+            telegramService.sendMessage("Projecto agregado correctamente, puedes agregar tareas con /addTask, agregar developers con /addDeveloper y ver el estado del proyecto con /showProject");
 
            
         } catch (Exception e) {

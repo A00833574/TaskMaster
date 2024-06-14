@@ -71,7 +71,7 @@ public class DeleteTodoCommand implements BotCommand {
             taskService.deleteTaskById(id);
 
             telegramService.addRow("(VER TAREAS) /listTodo");
-            telegramService.addRow("(AGREGAR TAREA) /addTodo");
+            telegramService.addRow("(AGREGAR TAREA) /addTask");
             telegramService.addRow("(CAMBIAR ESTADO TAREA) /changeStatus");
             telegramService.addRow("(IR A INICIO)/start");
             telegramService.sendMessage("Tarea eliminada");

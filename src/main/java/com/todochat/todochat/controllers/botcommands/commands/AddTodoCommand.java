@@ -69,7 +69,7 @@ public class AddTodoCommand implements BotCommand {
                 newItem.setName(arguments[0]);
                 newItem.setDescription(arguments[1]);
             } catch (Exception e) {
-                telegramService.sendMessage("El comando debe tener el siguiente formato: /addTodo-<nombre>-<descripcion>.");
+                telegramService.sendMessage("El comando debe tener el siguiente formato: /addTask-<nombre>-<descripcion>.");
                 return;
             }
 
@@ -79,7 +79,7 @@ public class AddTodoCommand implements BotCommand {
             newItem.setProject(project);
             taskService.createTask(newItem);
 
-            telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo", "(AGREGAR TAREA)/addTodo"));
+            telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo", "(AGREGAR TAREA)/addTask"));
             telegramService.addRow(List.of("(ELIMINAR TAREA) /deleteTodo", "(CAMBIAR ESTADO TAREA) /changeStatus"));
             telegramService.addRow("(IR A INICIO)/start");
 
