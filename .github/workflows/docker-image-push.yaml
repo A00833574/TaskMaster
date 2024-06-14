@@ -77,11 +77,11 @@ jobs:
 
       - name: Update Deployment with New Image
         run: |
-          kubectl set image deployment/todochat-deployment todochat=${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
+          kubectl set image deployment/taskmaster taskmaster=${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/taskmaster:latest
 
       - name: Rollout Restart Deployment
         run: |
-          kubectl rollout restart deployment/todochat-deployment
+          kubectl rollout restart deployment/taskmaster
 
       - name: Check deployment status
         run: |
