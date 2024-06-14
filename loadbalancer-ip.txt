@@ -1,1 +1,1 @@
-The new LoadBalancer IP address is: 159.54.148.184
+The new LoadBalancer IP address is: <pending>
