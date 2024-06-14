@@ -43,7 +43,7 @@ jobs:
       - name: Build Docker image
         run: |
           COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
-          docker build -t todochat:${COMMIT_SHA} .
+          docker build -t taskmaster:${COMMIT_SHA} .
 
       - name: Log in to OCI Registry
         env:
@@ -54,7 +54,7 @@ jobs:
       - name: Tag Docker image
         run: |
           COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
-          docker tag todochat:${COMMIT_SHA} ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/taskmaster:${COMMIT_SHA}
+          docker tag taskmaster:${COMMIT_SHA} ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/taskmaster:${COMMIT_SHA}
 
       - name: Push Docker image to OCI Registry
         run: |
@@ -66,8 +66,8 @@ jobs:
       - name: Verify Docker Image
         run: |
           COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
-          docker pull ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:${COMMIT_SHA}
-          docker images | grep todochat
+          docker pull ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/taskmaster:${COMMIT_SHA}
+          docker images | grep taskmaster
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
