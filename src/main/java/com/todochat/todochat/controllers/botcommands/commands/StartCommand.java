@@ -47,6 +47,7 @@ public class StartCommand implements BotCommand {
             telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo", "(AGREGAR TAREA)/addTask"));
             telegramService.addRow("(CERRAR SESION)/logout");
             String message = """
+                    Version 1.0.0
                     Bienvenido desarrollador %s
                     Tus datos:
                     Nombre completo %s
@@ -83,6 +84,7 @@ public class StartCommand implements BotCommand {
             telegramService.addRow("(CERRAR SESION) /logout");
 
             String message = """
+                    Version 1.0.0
                     Bienvenido manager %s
                     Tus datos:
                     Nombre completo %s
