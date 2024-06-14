@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: taskmaster
-        image: qro.ocir.io/axezrt7sddfw/equipo3/taskmaster:${COMMIT_SHA}
+        image: qro.ocir.io/axezrt7sddfw/taskmaster:c2bc280
         imagePullPolicy: Always
         ports:
         - name: taskmaster
