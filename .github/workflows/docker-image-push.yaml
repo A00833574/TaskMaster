@@ -54,13 +54,13 @@ jobs:
       - name: Tag Docker image
         run: |
           COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
-          docker tag todochat:${COMMIT_SHA} ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:${COMMIT_SHA}
+          docker tag todochat:${COMMIT_SHA} ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/taskmaster:${COMMIT_SHA}
 
       - name: Push Docker image to OCI Registry
         run: |
           COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
           for i in {1..5}; do
-            docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:${COMMIT_SHA} && break || sleep 60;
+            docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/taskmaster:${COMMIT_SHA} && break || sleep 60;
           done
 
       - name: Verify Docker Image
