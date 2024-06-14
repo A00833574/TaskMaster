@@ -42,7 +42,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t todochat .
+          COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          docker build -t todochat:${COMMIT_SHA} .
 
       - name: Log in to OCI Registry
         env:
@@ -52,13 +53,21 @@ jobs:
 
       - name: Tag Docker image
         run: |
-          docker tag todochat ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
+          COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          docker tag todochat:${COMMIT_SHA} ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:${COMMIT_SHA}
 
       - name: Push Docker image to OCI Registry
         run: |
+          COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
           for i in {1..5}; do
-            docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest && break || sleep 60;
+            docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:${COMMIT_SHA} && break || sleep 60;
           done
+
+      - name: Verify Docker Image
+        run: |
+          COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          docker pull ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:${COMMIT_SHA}
+          docker images | grep todochat
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
@@ -75,27 +84,40 @@ jobs:
           kubectl config view
           kubectl get nodes
 
-      - name: Deploy to Kubernetes
+      - name: Update Deployment YAML
         run: |
-          kubectl delete -f taskmaster.yaml --ignore-not-found=true
-          kubectl create -f taskmaster.yaml
+          COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          sed -i "s|image: .*/taskmaster:.*|image: ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/taskmaster:${COMMIT_SHA}|g" taskmaster.yaml
+          cat taskmaster.yaml
+
+      - name: Apply Kubernetes Configuration
+        run: |
+          kubectl apply -f taskmaster.yaml
+          kubectl rollout status deployment/taskmaster
+
+      - name: Verify Deployed Images
+        run: |
+          echo "Verifying deployed images in Kubernetes..."
+          kubectl get pods -o jsonpath="{.items[*].spec.containers[*].image}" -l app=taskmaster
 
       - name: Check deployment status
         run: |
           sleep 40
-          kubectl get pods
-          kubectl get services
+          kubectl get pods -l app=taskmaster
+          kubectl describe deployment taskmaster
+          kubectl describe pods -l app=taskmaster
 
       - name: Get LoadBalancer IP
         id: get_ip
         run: |
-          IP=$(kubectl get services | grep LoadBalancer | awk '{print $4}')
+          IP=$(kubectl get services taskmaster-lb -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "LoadBalancer IP: $IP"
           echo "::set-output name=ip::$IP"
 
       - name: Write LoadBalancer IP to file
         run: |
           echo "The new LoadBalancer IP address is: ${{ steps.get_ip.outputs.ip }}" > loadbalancer-ip.txt
+          cat loadbalancer-ip.txt
 
       - name: Commit and push LoadBalancer IP file
         env:
@@ -104,6 +126,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add loadbalancer-ip.txt
-          git commit -m "Update LoadBalancer IP address [skip ci]"
+          git commit -m "Update LoadBalancer IP address [skip ci]" || echo "No changes to commit"
           git pull --rebase origin main
           git push origin main
