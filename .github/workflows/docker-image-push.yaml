@@ -60,6 +60,11 @@ jobs:
             docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest && break || sleep 60;
           done
 
+      - name: Verify Docker Image
+        run: |
+          docker pull ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
+          docker images | grep todochat
+
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
         with:
@@ -78,21 +83,23 @@ jobs:
       - name: Update Deployment with New Image
         run: |
           kubectl set image deployment/taskmaster taskmaster=${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/taskmaster:latest
+          kubectl rollout status deployment/taskmaster
 
       - name: Rollout Restart Deployment
         run: |
           kubectl rollout restart deployment/taskmaster
+          kubectl rollout status deployment/taskmaster
 
       - name: Check deployment status
         run: |
           sleep 40
-          kubectl get pods
-          kubectl get services
+          kubectl get pods -l app=taskmaster
+          kubectl describe deployment taskmaster
 
       - name: Get LoadBalancer IP
         id: get_ip
         run: |
-          IP=$(kubectl get services | grep LoadBalancer | awk '{print $4}')
+          IP=$(kubectl get services taskmaster-lb -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "LoadBalancer IP: $IP"
           echo "::set-output name=ip::$IP"
 
