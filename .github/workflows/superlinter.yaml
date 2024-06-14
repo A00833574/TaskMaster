@@ -29,6 +29,6 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: true
-          ENABLE_LINTERS: java,xml,yaml,markdown
+          ENABLE_LINTERS: java,yaml
 
             
