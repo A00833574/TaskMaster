@@ -75,10 +75,13 @@ jobs:
           kubectl config view
           kubectl get nodes
 
-      - name: Deploy to Kubernetes
+      - name: Update Deployment with New Image
         run: |
-          kubectl delete -f taskmaster.yaml --ignore-not-found=true
-          kubectl create -f taskmaster.yaml
+          kubectl set image deployment/todochat-deployment todochat=${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
+
+      - name: Rollout Restart Deployment
+        run: |
+          kubectl rollout restart deployment/todochat-deployment
 
       - name: Check deployment status
         run: |
@@ -107,4 +110,3 @@ jobs:
           git commit -m "Update LoadBalancer IP address [skip ci]"
           git pull --rebase origin main
           git push origin main
-
