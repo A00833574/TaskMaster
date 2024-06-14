@@ -43,6 +43,7 @@ public class LoginDeveloperCommand implements BotCommand {
             telegramService.addRow(List.of("(VER MIS TAREAS)/listTodo", "(AGREGAR TAREA)/addTask"));
             telegramService.addRow("(CERRAR SESION)/logout");
             String message = """
+                    Version 1.0.0
                     Bienvenido desarrollador %s
                     Tus datos:
                     Nombre completo %s

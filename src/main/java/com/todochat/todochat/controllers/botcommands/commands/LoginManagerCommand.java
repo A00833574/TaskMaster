@@ -54,6 +54,7 @@ public class LoginManagerCommand implements BotCommand {
             telegramService.addRow("(IR A INICIO) /start");
 
             String message = """
+                    Version 1.0.0
                     Bienvenido manager %s
                     Tus datos:
                     Nombre completo %s
