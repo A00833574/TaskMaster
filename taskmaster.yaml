@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: taskmaster
-        image: qro.ocir.io/axezrt7sddfw/taskmaster:509d78c
+        image: qro.ocir.io/axezrt7sddfw/taskmaster:d52900b
         imagePullPolicy: Always
         ports:
         - name: taskmaster
