@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: taskmaster
 spec:
+  progressDeadlineSeconds: 1200
   selector:
     matchLabels:
       app: taskmaster
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
       - name: taskmaster
-        image: qro.ocir.io/axezrt7sddfw/equipo3/taskmaster:last
+        image: qro.ocir.io/axezrt7sddfw/equipo3/taskmaster:latest
         imagePullPolicy: Always
         ports:
         - name: taskmaster

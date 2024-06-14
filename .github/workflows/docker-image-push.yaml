@@ -52,12 +52,12 @@ jobs:
 
       - name: Tag Docker image
         run: |
-          docker tag todochat ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:last
+          docker tag todochat ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest
 
       - name: Push Docker image to OCI Registry
         run: |
           for i in {1..5}; do
-            docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:last && break || sleep 60;
+            docker push ${{ secrets.OCI_REGION }}.ocir.io/${{ secrets.OCI_NAMESPACE }}/todochat:latest && break || sleep 60;
           done
 
       - name: Set up kubectl
